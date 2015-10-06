@@ -3,6 +3,7 @@ package elec332.cmip;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import elec332.cmip.mods.MainCompatHandler;
@@ -18,7 +19,7 @@ import java.io.File;
 /**
  * Created by Elec332 on 24-2-2015.
  */
-@Mod(modid = CMIP.ModID, name = CMIP.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,)",
+@Mod(modid = CMIP.ModID, name = CMIP.ModName, dependencies = ModInfo.DEPENDENCIES+"@[#ELECCORE_VER#,);after:Waila;after:NotEnoughItems",
         acceptedMinecraftVersions = ModInfo.ACCEPTEDMCVERSIONS, useMetadata = true, canBeDeactivated = true)
 public class CMIP {
 
@@ -60,6 +61,11 @@ public class CMIP {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
+        //NOPE
+    }
+
+    @Mod.EventHandler
+    public void loadComplete(FMLLoadCompleteEvent event){
         compatHandler.init();
     }
 
