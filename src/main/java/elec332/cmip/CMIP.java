@@ -53,7 +53,7 @@ public class CMIP {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        compatHandler.initHandlers();
+        compatHandler.init();
     }
 
     @Mod.EventHandler

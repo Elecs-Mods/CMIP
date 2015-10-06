@@ -34,7 +34,13 @@ public class MainCompatHandler extends AbstractCompatHandler {
         }
     }
 
-    public final void initHandlers(){
+    @Override
+    public void init() {
+        super.init();
+        initHandlers();
+    }
+
+    private void initHandlers(){
         for (CMIPCompatHandler handler : handlers){
             handler.init();
         }
@@ -48,11 +54,6 @@ public class MainCompatHandler extends AbstractCompatHandler {
         CMIPCompatHandler handler = new CMIPCompatHandler(modName);
         addHandler(handler);
         return handler;
-    }
-
-    @Override
-    public void addHandler(ICompatHandler handler) {
-        throw new UnsupportedOperationException();
     }
 
     public static CMIPCompatHandler waila, nei;

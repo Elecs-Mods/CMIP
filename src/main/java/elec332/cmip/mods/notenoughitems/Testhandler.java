@@ -13,6 +13,6 @@ public class Testhandler extends AbstractCompatHandler.ICompatHandler {
 
     @Override
     public void init() {
-        System.out.println("NEI loaded!");
+        //System.out.println("NEI loaded!");
     }
 }
