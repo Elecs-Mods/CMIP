@@ -17,11 +17,19 @@ public class ClientMessageHandler {
     }
 
     public static String getLiquidMessage(){
-        return localise("cmip.message.liquid")+": ";
+        return localise("cmip.message.liquid") + ": ";
     }
 
     public static String getAmountMessage(){
-        return localise("cmip.message.amount")+": ";
+        return localise("cmip.message.amount") + ": ";
+    }
+
+    public static String getDimensionMessage(){
+        return localise("cmip.message.dimension") + ": ";
+    }
+
+    public static String getNameMessage(){
+        return localise("cmip.message.name") + ": ";
     }
 
     private static String localise(String s){

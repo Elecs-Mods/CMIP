@@ -2,3 +2,5 @@
 cmip.message.empty=Empty
 cmip.message.liquid=Liquid
 cmip.message.amount=Amount
+cmip.message.dimension=Dimension
+cmip.message.name=Name
