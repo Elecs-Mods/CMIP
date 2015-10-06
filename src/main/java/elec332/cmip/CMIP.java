@@ -40,6 +40,7 @@ public class CMIP {
         logger = event.getModLog();
         mainConfigFolder = FileHelper.getCustomConfigFolderElec(event, ModName);
         mainConfig = new Configuration(new File(mainConfigFolder, "main.cfg"));
+        mainConfig.load();
         compatHandler = new MainCompatHandler(mainConfig, logger);
         compatHandler.loadHandlers();
         //setting up mod stuff
@@ -48,17 +49,18 @@ public class CMIP {
                 "Provides more cross-mod integration.",
                 "website link", "logo",
                 new String[]{"Elec332"});
-
+        if (mainConfig.hasChanged())
+            mainConfig.save();
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        compatHandler.init();
+        //NOPE
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
-        //NOPE
+        compatHandler.init();
     }
 
 }

@@ -1,9 +1,10 @@
 package elec332.cmip.mods.waila;
 
+import com.google.common.collect.Lists;
+import elec332.cmip.client.ClientMessageHandler;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -26,14 +27,33 @@ public class ForgeWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        FluidTankInfo[] data = ((IFluidHandler) accessor.getTileEntity()).getTankInfo(accessor.getSide());
-        if (data != null) {
-            for (FluidTankInfo info : data) {
-                if (info != null) {
-                    currenttip.add((info.fluid == null ? 0 : info.fluid.amount) + " / " + info.capacity + (info.fluid == null ? "" : " " + StatCollector.translateToLocal(info.fluid.getUnlocalizedName())));
-                }
+        List<FluidTankInfo> data = filter(((IFluidHandler) accessor.getTileEntity()).getTankInfo(accessor.getSide()));
+        if (data.isEmpty()) {
+            currenttip.add(ClientMessageHandler.getEmptyMessage());
+        } else if (data.size() == 1){
+            FluidTankInfo info = data.get(0);
+            if (info.fluid == null || info.fluid.amount == 0) {
+                currenttip.add(ClientMessageHandler.getEmptyMessage());
+            } else {
+                currenttip.add(ClientMessageHandler.getLiquidMessage() + info.fluid.getLocalizedName());
+                currenttip.add(ClientMessageHandler.getAmountMessage() + info.fluid.amount + "/" + info.capacity);
+            }
+        } else {
+            for (FluidTankInfo info : data){
+                currenttip.add((info.fluid == null ? 0 : info.fluid.amount) + "/" + info.capacity + (info.fluid == null ? "" : " " + info.fluid.getLocalizedName()));
             }
         }
         return currenttip;
+    }
+
+    private List<FluidTankInfo> filter(FluidTankInfo... data){
+        List<FluidTankInfo> ret = Lists.newArrayList();
+        if (data != null){
+            for (FluidTankInfo fluidTankInfo : data){
+                if (fluidTankInfo != null)
+                    ret.add(fluidTankInfo);
+            }
+        }
+        return ret;
     }
 }
