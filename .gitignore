@@ -1,1 +1,7 @@
 *.db
+*.iml
+*.iws
+*.ipr
+.gradle/
+eclipse/
+out/
