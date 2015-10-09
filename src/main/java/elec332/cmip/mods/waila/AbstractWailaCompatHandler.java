@@ -66,7 +66,7 @@ public abstract class AbstractWailaCompatHandler extends AbstractCMIPCompatHandl
         }
     }
 
-    protected IWailaRegistrar getRegistrar(){
+    protected static IWailaRegistrar getRegistrar(){
         return ModuleRegistrar.instance();
     }
 

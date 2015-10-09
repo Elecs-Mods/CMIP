@@ -4,6 +4,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.StatCollector;
 
+import java.text.DecimalFormat;
+
 import static elec332.cmip.client.ClientMessageHandler.WailaSpecialChars.*;
 
 /**
@@ -11,6 +13,8 @@ import static elec332.cmip.client.ClientMessageHandler.WailaSpecialChars.*;
  */
 @SideOnly(Side.CLIENT)
 public class ClientMessageHandler {
+
+    private static final DecimalFormat format = new DecimalFormat("####.##");
 
     public static String getEmptyMessage(){
         return ITALIC + localise("cmip.message.empty");
@@ -32,8 +36,52 @@ public class ClientMessageHandler {
         return localise("cmip.message.name") + ": ";
     }
 
+    public static String getProfessionMessage(){
+        return localise("cmip.message.profession") + ": ";
+    }
+
+    public static String getEnergyMessage(){
+        return localise("cmip.message.energy") + ": ";
+    }
+
+    public static String getEnergyTierMessage(){
+        return localise("cmip.message.energy") + localise("cmip.message.tier") + ": ";
+    }
+
+    public static String getTierMessage(){
+        return localise("cmip.message.tier") + ": ";
+    }
+
+    public static String getOutputMessage(){
+        return localise("cmip.message.output") + ": ";
+    }
+
+    public static String getProgressMessage(){
+        return localise("cmip.message.progress") + ": ";
+    }
+
+    public static String getTargetMessage(){
+        return localise("cmip.message.target") + ": ";
+    }
+
+    public static String getHeatMessage(){
+        return localise("cmip.message.heat") + ": ";
+    }
+
+    public static String getMaxMessage(){
+        return localise("cmip.message.max");
+    }
+
+    public static String getMinMessage(){
+        return localise("cmip.message.min");
+    }
+
     private static String localise(String s){
         return StatCollector.translateToLocal(s);
+    }
+
+    public static String format(double d){
+        return format.format(d);
     }
 
     /**

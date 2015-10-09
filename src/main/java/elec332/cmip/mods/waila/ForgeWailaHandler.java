@@ -4,8 +4,15 @@ import com.google.common.collect.Lists;
 import elec332.cmip.client.ClientMessageHandler;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaEntityAccessor;
+import mcp.mobius.waila.api.IWailaEntityProvider;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 
@@ -14,7 +21,7 @@ import java.util.List;
 /**
  * Created by Elec332 on 6-10-2015.
  */
-public class ForgeWailaHandler extends AbstractWailaCompatHandler {
+public class ForgeWailaHandler extends AbstractWailaCompatHandler implements IWailaEntityProvider{
 
     public ForgeWailaHandler(){
         ignored = Lists.newArrayList();
@@ -57,7 +64,7 @@ public class ForgeWailaHandler extends AbstractWailaCompatHandler {
             ModuleRegistrar.instance().bodyBlockProviders.remove(clazz);
         }
         registerHandler(Type.BODY, IFluidHandler.class);
-
+        getRegistrar().registerBodyProvider((IWailaEntityProvider)this, EntityVillager.class);
         ignored.add("tconstruct.smeltery.logic.LavaTankLogic");
     }
 
@@ -99,5 +106,31 @@ public class ForgeWailaHandler extends AbstractWailaCompatHandler {
             }
         }
         return ret;
+    }
+
+    @Override
+    public Entity getWailaOverride(IWailaEntityAccessor accessor, IWailaConfigHandler config) {
+        return null;
+    }
+
+    @Override
+    public List<String> getWailaHead(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
+        if (entity instanceof EntityVillager){
+            currenttip.add(ClientMessageHandler.getProfessionMessage()+((EntityVillager)entity).getProfession());
+        }
+        return currenttip;
+    }
+
+    public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config){
+        return currenttip;
+    }
+
+    public List<String> getWailaTail(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config){
+        return currenttip;
+    }
+
+
+    public NBTTagCompound getNBTData(EntityPlayerMP player, Entity ent, NBTTagCompound tag, World world){
+        return tag;
     }
 }

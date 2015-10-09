@@ -11,6 +11,7 @@ import elec332.core.helper.FileHelper;
 import elec332.core.helper.MCModInfo;
 import elec332.core.modBaseUtils.ModInfo;
 import elec332.cmip.proxies.CommonProxy;
+import elec332.core.network.NetworkHandler;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
@@ -35,11 +36,13 @@ public class CMIP {
     public static File mainConfigFolder;
     public static Configuration mainConfig;
     public static MainCompatHandler compatHandler;
+    public static NetworkHandler networkHandler;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
         mainConfigFolder = FileHelper.getCustomConfigFolderElec(event, ModName);
+        networkHandler = new NetworkHandler(ModID);
         mainConfig = new Configuration(new File(mainConfigFolder, "main.cfg"));
         mainConfig.load();
         compatHandler = new MainCompatHandler(mainConfig, logger);

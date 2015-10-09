@@ -65,6 +65,7 @@ dependencies {
     compile "codechicken:CodeChickenLib:"+config.minecraft_version + "-" + config.ccl_version + ":dev"
     compile "codechicken:CodeChickenCore:"+config.minecraft_version + "-" + config.ccc_version + ":dev"
     compile "codechicken:NotEnoughItems:"+config.minecraft_version + "-" + config.nei_version + ":dev"
+	compile "net.industrial-craft:industrialcraft-2:2.2.718-experimental:dev"
 }
 
 processResources
