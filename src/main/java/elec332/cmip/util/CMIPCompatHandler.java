@@ -52,7 +52,7 @@ public class CMIPCompatHandler extends AbstractCompatHandler {
     }
 
     private String getNameFor(ICompatHandler handler){
-        return name + "-" + handler.getName();
+        return handler.getName() + "-" + name;
     }
 
     @Override

@@ -76,6 +76,51 @@ public class ClientMessageHandler {
         return localise("cmip.message.min");
     }
 
+    public static String getAverageMessage(){
+        return localise("cmip.message.average");
+    }
+
+    public static String getNoAccessMessage(){
+        return ITALIC + localise("cmip.message.noAccess");
+    }
+
+    public static String getOwnerMessage(){
+        return localise("cmip.message.owner") + ": ";
+    }
+
+    public static String getActiveMessage(){
+        return localise("cmip.message.active") + ": ";
+    }
+
+    public static String getRangeMessage(){
+        return localise("cmip.message.range") + ": ";
+    }
+
+    public static String getLoadedChunksMessage(){
+        return localise("cmip.message.loadedChunks") + ": ";
+    }
+
+    public static String getAccessMessage(){
+        return localise("cmip.message.access") + ": ";
+    }
+
+    public static String getDroneMessage(){
+        return localise("cmip.message.forestry.drone") + ": ";
+    }
+
+    public static String getQueenMessage(){
+        return localise("cmip.message.forestry.queen") + ": ";
+    }
+
+    public static String getMailMessage(boolean mail){
+        return mail ? localise("cmip.message.forestry.newMail") + "!" : ITALIC + localise("cmip.message.forestry.noNewMail");
+    }
+
+    public static String getLifeSpanMessage(){
+        return localise("cmip.message.lifeSpan") + ": ";
+    }
+
+
     private static String localise(String s){
         return StatCollector.translateToLocal(s);
     }

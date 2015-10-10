@@ -115,22 +115,25 @@ public class ForgeWailaHandler extends AbstractWailaCompatHandler implements IWa
 
     @Override
     public List<String> getWailaHead(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
+        return currenttip;
+    }
+
+    @Override
+    public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config){
         if (entity instanceof EntityVillager){
             currenttip.add(ClientMessageHandler.getProfessionMessage()+((EntityVillager)entity).getProfession());
         }
         return currenttip;
     }
 
-    public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config){
-        return currenttip;
-    }
-
+    @Override
     public List<String> getWailaTail(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config){
         return currenttip;
     }
 
-
+    @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, Entity ent, NBTTagCompound tag, World world){
         return tag;
     }
+
 }

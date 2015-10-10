@@ -46,10 +46,6 @@ public class MainCompatHandler extends AbstractCompatHandler {
         }
     }
 
-    private static CMIPCompatHandler newCompatHandlerFor(String name){
-        return CMIP.compatHandler.newCompatHandler(name);
-    }
-
     public CMIPCompatHandler newCompatHandler(String modName){
         CMIPCompatHandler handler = new CMIPCompatHandler(modName);
         addHandler(handler);
@@ -59,7 +55,7 @@ public class MainCompatHandler extends AbstractCompatHandler {
     public static CMIPCompatHandler waila, nei;
 
     public void loadHandlers(){
-        waila = newCompatHandlerFor(WAILA);
+        waila = newCompatHandler(WAILA);
         nei = newCompatHandler(NEI);
     }
 

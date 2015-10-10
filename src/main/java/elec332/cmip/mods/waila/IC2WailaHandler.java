@@ -105,15 +105,4 @@ public class IC2WailaHandler extends AbstractWailaCompatHandler{
         return tag;
     }
 
-    private static final String energy, maxEnergy, tier, progress, tpLoc, heat, maxHeat;
-
-    static {
-        energy = "energy";
-        maxEnergy = "maxEnergy";
-        tier = "tier";
-        progress = "progress";
-        tpLoc = "tpLoc";
-        heat = "heat";
-        maxHeat = "maxHeat";
-    }
 }

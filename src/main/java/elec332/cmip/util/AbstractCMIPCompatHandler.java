@@ -22,4 +22,29 @@ public abstract class AbstractCMIPCompatHandler extends AbstractCompatHandler.IC
         }
         return ret;
     }
+
+    protected static final String energy, maxEnergy, tier, progress, tpLoc, heat, maxHeat, laser, avgEnergy, name, access,
+                                    range, active, specialData1, energyOut, specialData2, specialData3, specialData4, specialData5;
+
+    static {
+        energy = "energy";
+        maxEnergy = "maxEnergy";
+        tier = "tier";
+        progress = "progress";
+        tpLoc = "tpLoc";
+        heat = "heat";
+        maxHeat = "maxHeat";
+        laser = "laser";
+        avgEnergy = "avgEnergy";
+        name = "name";
+        access = "access";
+        range = "range";
+        active = "active";
+        specialData1 = "specialData1";
+        energyOut = "energyOut";
+        specialData2 = "specialData2";
+        specialData3 = "specialData3";
+        specialData4 = "specialData4";
+        specialData5 = "specialData5";
+    }
 }
