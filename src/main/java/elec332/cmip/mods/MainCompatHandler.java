@@ -59,6 +59,7 @@ public class MainCompatHandler extends AbstractCompatHandler {
         nei = newCompatHandler(NEI);
     }
 
+    public static final String APPLIEDENERGISTICS2 = "appliedenergistics2";
     public static final String ARSMAGICA2 = "arsmagica2";
     public static final String BIBLIOCRAFT = "BiblioCraft";
     public static final String BIOMESOPLENTY = "BiomesOPlenty";
@@ -74,7 +75,9 @@ public class MainCompatHandler extends AbstractCompatHandler {
     public static final String COMPUTERCRAFT_TURTLE = "CCTurtle";
     public static final String ENDERSTORAGE = "EnderStorage";
     public static final String EXTRABEES = "ExtraBees";
+    public static final String EXTRAUTILITIES = "ExtraUtilities";
     public static final String FORESTRY = "Forestry";
+    public static final String FORGEMULTIPART = "ForgeMicroblock";
     public static final String GREGTECH = "gregtech";
     public static final String IC2 = "IC2";
     public static final String MAGICBEES = "MagicBees";

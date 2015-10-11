@@ -27,3 +27,5 @@ cmip.message.forestry.newMail=New Mail
 cmip.message.forestry.noNewMail=No new mail
 
 cmip.message.lifeSpan=Life Span
+cmip.message.frequency=Frequency
+cmip.message.searchLocation=Search location

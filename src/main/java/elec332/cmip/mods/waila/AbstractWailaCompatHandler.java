@@ -26,22 +26,24 @@ public abstract class AbstractWailaCompatHandler extends AbstractCMIPCompatHandl
 
     @Override
     public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        return null;
+        return currenttip;
     }
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        return null;
+        return currenttip;
     }
 
     @Override
     public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        return null;
+        return currenttip;
     }
 
     @Override
-    public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-        return null;
+    public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
+        if (tile != null && tag != null)
+            tile.writeToNBT(tag);
+        return tag;
     }
 
     protected void registerHandler(Type type, Class... classes){

@@ -120,6 +120,14 @@ public class ClientMessageHandler {
         return localise("cmip.message.lifeSpan") + ": ";
     }
 
+    public static String getSearchLocationMessage(){
+        return localise("cmip.message.searchLocation") + ": ";
+    }
+
+
+    public static String getFrequencyMessage(){
+        return localise("cmip.message.frequency") + ": ";
+    }
 
     private static String localise(String s){
         return StatCollector.translateToLocal(s);
