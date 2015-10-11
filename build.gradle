@@ -28,6 +28,10 @@ repositories {
         name 'ForgeFS'
         url 'http://files.minecraftforge.net/maven'
     }
+	maven {
+		name = "ic2"
+		url = "http://maven.ic2.player.to/"
+	}
 }
 
 apply plugin: 'forge'
