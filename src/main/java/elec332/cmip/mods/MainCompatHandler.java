@@ -2,13 +2,11 @@ package elec332.cmip.mods;
 
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.Loader;
-import elec332.cmip.CMIP;
 import elec332.cmip.util.CMIPCompatHandler;
 import elec332.core.util.AbstractCompatHandler;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
 
-import javax.smartcardio.CardTerminal;
 import java.util.List;
 
 /**
@@ -81,6 +79,7 @@ public class MainCompatHandler extends AbstractCompatHandler {
     public static final String GREGTECH = "gregtech";
     public static final String IC2 = "IC2";
     public static final String MAGICBEES = "MagicBees";
+    public static final String MAGNETICRAFT = "Magneticraft";
     public static final String MEKANISM = "Mekanism";
     public static final String MPS = "powersuits";
     public static final String MFR = "MineFactoryReloaded";

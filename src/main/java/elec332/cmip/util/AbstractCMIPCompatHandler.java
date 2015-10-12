@@ -24,7 +24,8 @@ public abstract class AbstractCMIPCompatHandler extends AbstractCompatHandler.IC
     }
 
     protected static final String energy, maxEnergy, tier, progress, tpLoc, heat, maxHeat, laser, avgEnergy, name, access,
-                                    range, active, specialData1, energyOut, specialData2, specialData3, specialData4, specialData5;
+                                    range, active, specialData1, energyOut, specialData2, specialData3, specialData4, specialData5,
+                                    pressure, maxPressure, temperature, maxTemperature, fluid;
 
     static {
         energy = "energy";
@@ -46,5 +47,10 @@ public abstract class AbstractCMIPCompatHandler extends AbstractCompatHandler.IC
         specialData3 = "specialData3";
         specialData4 = "specialData4";
         specialData5 = "specialData5";
+        pressure = "pressure";
+        maxPressure = "maxPressure";
+        temperature = "temperature";
+        maxTemperature = "maxTemperature";
+        fluid = "fluid";
     }
 }

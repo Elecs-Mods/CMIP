@@ -64,6 +64,7 @@ public class ClientMessageHandler {
         return localise("cmip.message.target") + ": ";
     }
 
+    @Deprecated
     public static String getHeatMessage(){
         return localise("cmip.message.heat") + ": ";
     }
@@ -124,10 +125,31 @@ public class ClientMessageHandler {
         return localise("cmip.message.searchLocation") + ": ";
     }
 
-
     public static String getFrequencyMessage(){
         return localise("cmip.message.frequency") + ": ";
     }
+
+    public static String getPressureMessage(){
+        return localise("cmip.message.pressure") + ": ";
+    }
+
+    public static String getFluidMessage(){
+        return localise("cmip.message.fluid") + ": ";
+    }
+
+    public static String getTemperatureMessage(){
+        return localise("cmip.message.temperature") + ": ";
+    }
+
+    public static String getVoltageMessage(){
+        return localise("cmip.message.voltage") + ": ";
+    }
+
+    public static String getResistanceMessage(){
+        return localise("cmip.message.resistance") + ": ";
+    }
+
+
 
     private static String localise(String s){
         return StatCollector.translateToLocal(s);
