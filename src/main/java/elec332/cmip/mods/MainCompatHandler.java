@@ -71,6 +71,7 @@ public class MainCompatHandler extends AbstractCompatHandler {
     public static final String CHICKENCHUNKS = "ChickenChunks";
     public static final String COMPUTERCRAFT = "ComputerCraft";
     public static final String COMPUTERCRAFT_TURTLE = "CCTurtle";
+    public static final String DRACONICEVOLUTION = "DraconicEvolution";
     public static final String ENDERSTORAGE = "EnderStorage";
     public static final String EXTRABEES = "ExtraBees";
     public static final String EXTRAUTILITIES = "ExtraUtilities";

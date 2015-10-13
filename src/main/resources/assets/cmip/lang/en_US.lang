@@ -35,3 +35,4 @@ cmip.message.fluid=Fluid
 cmip.message.temperature=Temperature
 cmip.message.voltage=Voltage
 cmip.message.resistance=Resistance
+cmip.message.connectedMachines=Connected Machines

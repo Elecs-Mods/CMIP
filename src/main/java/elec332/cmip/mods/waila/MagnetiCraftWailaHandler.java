@@ -36,7 +36,8 @@ public class MagnetiCraftWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-
+        registerHandler(Type.BODY, IPressureMultipart.class, IPressurePipe.class, IHeatMultipart.class, IHeatTile.class, IElectricMultiPart.class, IElectricTile.class);
+        registerHandler(Type.NBT, IPressureMultipart.class, IPressurePipe.class, IHeatMultipart.class, IHeatTile.class, IElectricMultiPart.class, IElectricTile.class);
     }
 
     @Override

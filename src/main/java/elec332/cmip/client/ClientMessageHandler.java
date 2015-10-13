@@ -149,6 +149,9 @@ public class ClientMessageHandler {
         return localise("cmip.message.resistance") + ": ";
     }
 
+    public static String getConnectedMachinesMessage(){
+        return localise("cmip.message.connectedMachines") + ": ";
+    }
 
 
     private static String localise(String s){
