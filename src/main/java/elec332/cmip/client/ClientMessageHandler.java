@@ -6,7 +6,7 @@ import net.minecraft.util.StatCollector;
 
 import java.text.DecimalFormat;
 
-import static elec332.cmip.client.ClientMessageHandler.WailaSpecialChars.*;
+import static elec332.cmip.client.ClientMessageHandler.WailaSpecialChars.ITALIC;
 
 /**
  * Created by Elec332 on 6-10-2015.

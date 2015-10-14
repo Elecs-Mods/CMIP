@@ -8,7 +8,6 @@ import ic2.core.block.TileEntityHeatSourceInventory;
 import ic2.core.block.machine.tileentity.TileEntityElectricMachine;
 import ic2.core.block.machine.tileentity.TileEntityStandardMachine;
 import ic2.core.block.machine.tileentity.TileEntityTeleporter;
-import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;

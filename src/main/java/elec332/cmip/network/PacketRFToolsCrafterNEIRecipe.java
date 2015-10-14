@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import elec332.cmip.mods.notenoughitems.RFToolsNEIHandler;
-import elec332.cmip.util.ContainerNull;
+import elec332.core.inventory.ContainerNull;
 import elec332.core.network.AbstractPacket;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;

@@ -6,16 +6,12 @@ import codechicken.nei.recipe.IRecipeHandler;
 import elec332.cmip.CMIP;
 import elec332.cmip.mods.notenoughitems.RFToolsNEIHandler;
 import elec332.cmip.network.PacketRFToolsCrafterNEIRecipe;
-import elec332.cmip.util.ContainerNull;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
