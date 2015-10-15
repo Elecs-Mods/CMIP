@@ -153,6 +153,26 @@ public class ClientMessageHandler {
         return localise("cmip.message.connectedMachines") + ": ";
     }
 
+    public static String getModeMessage(){
+        return localise("cmip.message.mode") + ": ";
+    }
+
+    public static String getOutPutMessage(){
+        return localise("cmip.message.input") + ": ";
+    }
+
+    public static String getInPutMessage(){
+        return localise("cmip.message.output") + ": ";
+    }
+
+    public static String getNiceInputModeMessage(boolean output){
+        return getModeMessage()+removeColon(output?getOutputMessage():getInPutMessage());
+    }
+
+    public static String getNoConnectionMessage(){
+        return ITALIC + localise("cmip.message.noConnection");
+    }
+
 
     private static String localise(String s){
         return StatCollector.translateToLocal(s);
@@ -162,6 +182,9 @@ public class ClientMessageHandler {
         return format.format(d);
     }
 
+    public static String removeColon(String s){
+        return s.replace(": ", "");
+    }
     /**
      * Copied from WAILA-API to avoid crashes when WAILA is not loaded
      */

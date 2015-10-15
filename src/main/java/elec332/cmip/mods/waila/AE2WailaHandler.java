@@ -80,7 +80,12 @@ public class AE2WailaHandler extends AbstractWailaCompatHandler {
             NBTTagCompound tag = accessor.getNBTData();
             if (tag != null) {
                 if (tag.hasKey(specialData1)) {
-                    currentToolTip.add(ClientMessageHandler.getFrequencyMessage()+tag.getLong(specialData1));
+                    long l = tag.getLong(specialData1);
+                    if (l != 0L) {
+                        currentToolTip.add(ClientMessageHandler.getFrequencyMessage() + tag.getLong(specialData1));
+                    } else {
+                    }
+                    currentToolTip.add(ClientMessageHandler.getNiceInputModeMessage(tag.getBoolean(specialData2)));
                 }
             }
             return currentToolTip;
@@ -91,6 +96,7 @@ public class AE2WailaHandler extends AbstractWailaCompatHandler {
             if (tile != null && tag != null){
                 if (part instanceof PartP2PTunnel){
                     tag.setLong(specialData1, ((PartP2PTunnel) part).freq);
+                    tag.setBoolean(specialData2, ((PartP2PTunnel) part).output);
                 }
             }
             return tag;

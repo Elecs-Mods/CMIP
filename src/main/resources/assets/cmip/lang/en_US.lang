@@ -36,3 +36,6 @@ cmip.message.temperature=Temperature
 cmip.message.voltage=Voltage
 cmip.message.resistance=Resistance
 cmip.message.connectedMachines=Connected Machines
+cmip.message.mode=Mode
+cmip.message.input=Input
+cmip.message.output=Output
