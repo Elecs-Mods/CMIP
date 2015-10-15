@@ -47,22 +47,26 @@ public abstract class AbstractWailaCompatHandler extends AbstractCMIPCompatHandl
     }
 
     protected void registerHandler(Type type, Class... classes){
+        registerHandler(type, this, classes);
+    }
+
+    protected void registerHandler(Type type, IWailaDataProvider obj, Class... classes){
         for (Class clazz : classes){
             switch (type){
                 case STACK:
-                    getRegistrar().registerStackProvider(this, clazz);
+                    getRegistrar().registerStackProvider(obj, clazz);
                     return;
                 case HEAD:
-                    getRegistrar().registerHeadProvider(this, clazz);
+                    getRegistrar().registerHeadProvider(obj, clazz);
                     return;
                 case BODY:
-                    getRegistrar().registerBodyProvider(this, clazz);
+                    getRegistrar().registerBodyProvider(obj, clazz);
                     return;
                 case TAIL:
-                    getRegistrar().registerTailProvider(this, clazz);
+                    getRegistrar().registerTailProvider(obj, clazz);
                     return;
                 case NBT:
-                    getRegistrar().registerNBTProvider(this, clazz);
+                    getRegistrar().registerNBTProvider(obj, clazz);
                     return;
             }
         }

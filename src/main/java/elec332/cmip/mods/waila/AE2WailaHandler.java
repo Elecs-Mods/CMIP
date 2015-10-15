@@ -1,8 +1,16 @@
 package elec332.cmip.mods.waila;
 
+import appeng.api.parts.IPart;
+import appeng.api.parts.IPartHost;
+import appeng.integration.modules.waila.PartWailaDataProvider;
+import appeng.integration.modules.waila.part.BasePartWailaDataProvider;
+import appeng.integration.modules.waila.part.IPartWailaDataProvider;
+import appeng.parts.p2p.PartP2PTunnel;
 import appeng.tile.qnb.TileQuantumBridge;
+import elec332.cmip.CMIP;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.core.java.ReflectionHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -27,6 +36,20 @@ public class AE2WailaHandler extends AbstractWailaCompatHandler {
     public void init() {
         registerHandler(Type.BODY, TileQuantumBridge.class);
         registerHandler(Type.NBT, TileQuantumBridge.class);
+        try {
+            PartWailaDataProvider aePartHandler = new PartWailaDataProvider();
+            Field ae2Providers = PartWailaDataProvider.class.getDeclaredField("providers");
+            @SuppressWarnings("unchecked")
+            List<IPartWailaDataProvider> list = (List<IPartWailaDataProvider>) ReflectionHelper.makeFinalFieldModifiable(ae2Providers).get(aePartHandler);
+            list.clear();
+            list.add(new P2PHandler());
+            for (Type type : Type.values()){
+                registerHandler(type, aePartHandler, IPartHost.class);
+            }
+        } catch (Exception e){
+            CMIP.logger.error("Error registering AE2 part handler.");
+        }
+
     }
 
     @Override
@@ -48,5 +71,29 @@ public class AE2WailaHandler extends AbstractWailaCompatHandler {
             }
         }
         return tag;
+    }
+
+    public static class P2PHandler extends BasePartWailaDataProvider{
+
+        @Override
+        public List<String> getWailaBody(IPart part, List<String> currentToolTip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+            NBTTagCompound tag = accessor.getNBTData();
+            if (tag != null) {
+                if (tag.hasKey(specialData1)) {
+                    currentToolTip.add(ClientMessageHandler.getFrequencyMessage()+tag.getLong(specialData1));
+                }
+            }
+            return currentToolTip;
+        }
+
+        @Override
+        public NBTTagCompound getNBTData(EntityPlayerMP player, IPart part, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
+            if (tile != null && tag != null){
+                if (part instanceof PartP2PTunnel){
+                    tag.setLong(specialData1, ((PartP2PTunnel) part).freq);
+                }
+            }
+            return tag;
+        }
     }
 }
