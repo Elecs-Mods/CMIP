@@ -84,6 +84,7 @@ public class AE2WailaHandler extends AbstractWailaCompatHandler {
                     if (l != 0L) {
                         currentToolTip.add(ClientMessageHandler.getFrequencyMessage() + tag.getLong(specialData1));
                     } else {
+                        currentToolTip.add(ClientMessageHandler.getNoConnectionMessage());
                     }
                     currentToolTip.add(ClientMessageHandler.getNiceInputModeMessage(tag.getBoolean(specialData2)));
                 }
