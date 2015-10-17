@@ -55,19 +55,19 @@ public abstract class AbstractWailaCompatHandler extends AbstractCMIPCompatHandl
             switch (type){
                 case STACK:
                     getRegistrar().registerStackProvider(obj, clazz);
-                    return;
+                    break;
                 case HEAD:
                     getRegistrar().registerHeadProvider(obj, clazz);
-                    return;
+                    break;
                 case BODY:
                     getRegistrar().registerBodyProvider(obj, clazz);
-                    return;
+                    break;
                 case TAIL:
                     getRegistrar().registerTailProvider(obj, clazz);
-                    return;
+                    break;
                 case NBT:
                     getRegistrar().registerNBTProvider(obj, clazz);
-                    return;
+                    break;
             }
         }
     }
