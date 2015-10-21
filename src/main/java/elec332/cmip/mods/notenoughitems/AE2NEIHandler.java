@@ -10,7 +10,7 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Elec332 on 10-10-2015.
  */
-public class AE2NEIHandler extends  AbstractNEICompatHandler{
+public class AE2NEIHandler extends AbstractNEICompatHandler{
 
     @Override
     public String getName() {

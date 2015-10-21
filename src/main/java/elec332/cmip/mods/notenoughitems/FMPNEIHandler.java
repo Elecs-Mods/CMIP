@@ -6,6 +6,7 @@ import codechicken.nei.api.API;
 import codechicken.nei.recipe.ShapelessRecipeHandler;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.GameRegistry;
 import elec332.cmip.mods.MainCompatHandler;
 import elec332.cmip.util.Config;
 import net.minecraft.block.Block;
@@ -28,7 +29,7 @@ public class FMPNEIHandler extends AbstractNEICompatHandler {
     @Override
     public void init() {
         if (Config.NEI.FMP.hideFMPMultiParts) {
-            Item item = MicroblockProxy.itemMicro();//GameRegistry.findItem("ForgeMicroblock", "microblock");
+            Item item = /*MicroblockProxy.itemMicro();*/GameRegistry.findItem("ForgeMicroblock", "microblock");
             int[] allTypes = new int[]{1, 2, 4, 257, 258, 260, 513, 514, 516, 769, 770, 772};
             List<ItemStack> toAdd = Lists.newArrayList();
             for (int i : allTypes) {
