@@ -10,6 +10,7 @@ import buildcraft.silicon.TileLaserTableBase;
 import com.google.common.collect.Lists;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
@@ -39,13 +40,15 @@ public class BuildCraftWailaHandler extends AbstractWailaCompatHandler implement
     public void init() {
         registerHandler(Type.BODY, TileBuildCraft.class, TileEngineBase.class, TileLaserTableBase.class);
         registerHandler(Type.NBT, TileBuildCraft.class, TileEngineBase.class, TileLaserTableBase.class);
-        getRegistrar().registerBodyProvider((IWailaEntityProvider)this, EntityRobotBase.class);
-        getRegistrar().registerNBTProvider((IWailaEntityProvider) this, EntityRobotBase.class);
-        getRegistrar().registerNBTProvider((IWailaEntityProvider) this, EntityRobot.class);
+        if (Config.WAILA.BuildCraft.robot) {
+            getRegistrar().registerBodyProvider((IWailaEntityProvider) this, EntityRobotBase.class);
+            getRegistrar().registerNBTProvider((IWailaEntityProvider) this, EntityRobotBase.class);
+            //getRegistrar().registerNBTProvider((IWailaEntityProvider) this, EntityRobot.class);
+        }
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             if (tag.hasKey(energy)){
@@ -62,23 +65,22 @@ public class BuildCraftWailaHandler extends AbstractWailaCompatHandler implement
                 currenttip.add(ClientMessageHandler.getHeatMessage()+tag.getInteger(heat));
             }
         }
-        return currenttip;
     }
 
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
         if (tile != null && tag != null){
 
-            if (tile instanceof TileBuildCraft){
+            if (tile instanceof TileBuildCraft && Config.WAILA.BuildCraft.energy){
                 tag.setInteger(energy, ((TileBuildCraft) tile).getBattery().getEnergyStored());
                 tag.setInteger(maxEnergy, ((TileBuildCraft) tile).getBattery().getMaxEnergyStored());
             }
-            if (tile instanceof TileEngineBase){
+            if (tile instanceof TileEngineBase && Config.WAILA.BuildCraft.heat){
                 tag.removeTag(maxEnergy);
                 tag.setInteger(energy, ((TileEngineBase) tile).getEnergyStored());
                 tag.setFloat(heat, (float)((TileEngineBase) tile).getCurrentHeatValue());
             }
-            if (tile instanceof TileLaserTableBase){
+            if (tile instanceof TileLaserTableBase && Config.WAILA.BuildCraft.avgLaserEnergy){
                 tag.removeTag(maxEnergy);
                 tag.setInteger(energy, ((TileLaserTableBase) tile).getEnergy());
                 tag.setInteger(avgEnergy, ((TileLaserTableBase) tile).getRecentEnergyAverage());

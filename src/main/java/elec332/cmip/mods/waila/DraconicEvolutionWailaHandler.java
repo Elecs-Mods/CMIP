@@ -3,6 +3,7 @@ package elec332.cmip.mods.waila;
 import com.brandon3055.draconicevolution.common.tileentities.energynet.TileRemoteEnergyBase;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,19 +26,20 @@ public class DraconicEvolutionWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-        registerHandler(Type.BODY, TileRemoteEnergyBase.class);
-        registerHandler(Type.NBT, TileRemoteEnergyBase.class);
+        if (Config.WAILA.DraconicEvolution.showLinkedDevices) {
+            registerHandler(Type.BODY, TileRemoteEnergyBase.class);
+            registerHandler(Type.NBT, TileRemoteEnergyBase.class);
+        }
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             if (tag.hasKey(specialData1)){
                 currenttip.add(ClientMessageHandler.getConnectedMachinesMessage()+tag.getInteger(specialData1));
             }
         }
-        return currenttip;
     }
 
     @Override

@@ -6,6 +6,7 @@ import codechicken.chunkloader.TileChunkLoaderBase;
 import codechicken.core.ServerUtils;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -28,19 +29,19 @@ public class ChickenChunksWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-        registerHandler(Type.BODY, TileChunkLoaderBase.class, TileChunkLoader.class);
+        registerHandler(Type.BODY, TileChunkLoaderBase.class);//, TileChunkLoader.class);
         registerHandler(Type.NBT, TileChunkLoaderBase.class, TileChunkLoader.class);
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             if (tag.hasKey(access)) {
                 boolean access = tag.getBoolean(ChickenChunksWailaHandler.access);
                 if (!access) {
                     currenttip.add(ClientMessageHandler.getNoAccessMessage());
-                    return currenttip;
+                    return;
                 }
                 currenttip.add(ClientMessageHandler.getOwnerMessage()+tag.getString(name));
                 currenttip.add(ClientMessageHandler.getActiveMessage()+tag.getBoolean(active));
@@ -50,14 +51,13 @@ public class ChickenChunksWailaHandler extends AbstractWailaCompatHandler {
                 }
             }
         }
-        return currenttip;
     }
 
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
         if (tag != null && tile != null){
             if (tile instanceof TileChunkLoaderBase){
-                boolean access = !(((TileChunkLoaderBase) tile).getOwner() != null && !((TileChunkLoaderBase) tile).getOwner().equals(player.getCommandSenderName()) && (!ChunkLoaderManager.opInteract() || !ServerUtils.isPlayerOP(player.getCommandSenderName())));
+                boolean access = !(((TileChunkLoaderBase) tile).getOwner() != null && !((TileChunkLoaderBase) tile).getOwner().equals(player.getCommandSenderName()) && (!ChunkLoaderManager.opInteract() || !ServerUtils.isPlayerOP(player.getCommandSenderName()))) || !Config.WAILA.ChickenChunks.showOnlyIfAccess;
                 tag.setBoolean(ChickenChunksWailaHandler.access, access);
                 if (access){
                     tag.setString(name, ((TileChunkLoaderBase) tile).getOwner());

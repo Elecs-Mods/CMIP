@@ -2,6 +2,7 @@ package elec332.cmip.mods.waila;
 
 import com.google.common.collect.Lists;
 import elec332.cmip.client.ClientMessageHandler;
+import elec332.cmip.util.Config;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
@@ -34,11 +35,12 @@ public class ForgeWailaHandler extends AbstractWailaCompatHandler implements IWa
 
     @Override
     public void init() {
-        List<Class> toRemove = Lists.newArrayList();
-        for (Class clazz : ModuleRegistrar.instance().bodyBlockProviders.keySet()){
-            if (IFluidHandler.class.isAssignableFrom(clazz)){
-                toRemove.add(clazz);
-            } /*else if (Block.class.isAssignableFrom(clazz)){
+        if (Config.WAILA.Forge.showTankInfo) {
+            List<Class> toRemove = Lists.newArrayList();
+            for (Class clazz : ModuleRegistrar.instance().bodyBlockProviders.keySet()) {
+                if (IFluidHandler.class.isAssignableFrom(clazz)) {
+                    toRemove.add(clazz);
+                } /*else if (Block.class.isAssignableFrom(clazz)){
                 for (Block block : GameData.getBlockRegistry().typeSafeIterable()){
                     if (ITileEntityProvider.class.isAssignableFrom(clazz)){
                         try {
@@ -59,21 +61,24 @@ public class ForgeWailaHandler extends AbstractWailaCompatHandler implements IWa
                     }
                 }
             }*/
+            }
+            for (Class clazz : toRemove) {
+                ModuleRegistrar.instance().bodyBlockProviders.remove(clazz);
+            }
+            registerHandler(Type.BODY, IFluidHandler.class);
+            ignored.add("tconstruct.smeltery.logic.LavaTankLogic");
         }
-        for (Class clazz : toRemove){
-            ModuleRegistrar.instance().bodyBlockProviders.remove(clazz);
+        if (Config.WAILA.Forge.showVillagerProfession) {
+            getRegistrar().registerBodyProvider((IWailaEntityProvider) this, EntityVillager.class);
         }
-        registerHandler(Type.BODY, IFluidHandler.class);
-        getRegistrar().registerBodyProvider((IWailaEntityProvider)this, EntityVillager.class);
-        ignored.add("tconstruct.smeltery.logic.LavaTankLogic");
     }
 
     public List<String> ignored;
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         if (isIgnored(accessor))
-            return currenttip;
+            return;
         List<FluidTankInfo> data = filter(((IFluidHandler) accessor.getTileEntity()).getTankInfo(accessor.getSide()));
         if (data.isEmpty()) {
             currenttip.add(ClientMessageHandler.getEmptyMessage());
@@ -87,10 +92,9 @@ public class ForgeWailaHandler extends AbstractWailaCompatHandler implements IWa
             }
         } else {
             for (FluidTankInfo info : data){
-                currenttip.add((info.fluid == null ? 0 : info.fluid.amount) + "/" + info.capacity + (info.fluid == null ? "" : " " + info.fluid.getLocalizedName()));
+                currenttip.add((info.fluid == null ? 0 : info.fluid.amount) + "/" + info.capacity + "mb" + (info.fluid == null ? "" : " " + info.fluid.getLocalizedName()));
             }
         }
-        return currenttip;
     }
 
     private boolean isIgnored(IWailaDataAccessor accessor){

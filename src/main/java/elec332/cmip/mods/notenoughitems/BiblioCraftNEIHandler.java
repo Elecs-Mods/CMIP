@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import cpw.mods.fml.common.registry.GameData;
 import elec332.cmip.CMIP;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import jds.bibliocraft.blocks.BlockLoader;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -28,17 +29,19 @@ public class BiblioCraftNEIHandler extends AbstractNEICompatHandler {
 
     @Override
     public void init() {
-        getBlocks();
-        List<ItemStack> toRemove = Lists.newArrayList();
-        for (Block block : GameData.getBlockRegistry().typeSafeIterable()){
-            if (shouldBeRemoved(block))
-                toRemove.add(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
-        }
+        if (Config.NEI.BiblioCraft.hideDuplicateBlocks) {
+            getBlocks();
+            List<ItemStack> toRemove = Lists.newArrayList();
+            for (Block block : GameData.getBlockRegistry().typeSafeIterable()) {
+                if (shouldBeRemoved(block))
+                    toRemove.add(new ItemStack(block, 1, OreDictionary.WILDCARD_VALUE));
+            }
 
-        for (Block block : biblioBlocks){
-            setItemListEntries(Item.getItemFromBlock(block), new ItemStack(block));
+            for (Block block : biblioBlocks) {
+                setItemListEntries(Item.getItemFromBlock(block), new ItemStack(block));
+            }
+            hideItems(toRemove);
         }
-        hideItems(toRemove);
     }
 
     private boolean shouldBeRemoved(Block block){

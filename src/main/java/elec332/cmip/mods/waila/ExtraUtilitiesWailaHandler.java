@@ -3,6 +3,7 @@ package elec332.cmip.mods.waila;
 import com.rwtema.extrautils.tileentity.transfernodes.TileEntityTransferNode;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,19 +26,20 @@ public class ExtraUtilitiesWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-        registerHandler(Type.BODY, TileEntityTransferNode.class);
-        registerHandler(Type.NBT, TileEntityTransferNode.class);
+        if (Config.WAILA.ExtraUtilities.showPipeData) {
+            registerHandler(Type.BODY, TileEntityTransferNode.class);
+            registerHandler(Type.NBT, TileEntityTransferNode.class);
+        }
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             if (tag.hasKey(specialData1)){
                 currenttip.add(ClientMessageHandler.getSearchLocationMessage()+tag.getInteger(specialData1)+", "+tag.getInteger(specialData2)+", "+tag.getInteger(specialData3));
             }
         }
-        return currenttip;
     }
 
     @Override

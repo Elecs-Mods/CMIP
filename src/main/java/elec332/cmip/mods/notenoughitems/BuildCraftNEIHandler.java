@@ -3,6 +3,7 @@ package elec332.cmip.mods.notenoughitems;
 import buildcraft.BuildCraftTransport;
 import buildcraft.transport.ItemFacade;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -18,6 +19,8 @@ public class BuildCraftNEIHandler extends AbstractNEICompatHandler {
     @Override
     public void init() {
         hideItem(new ItemStack(BuildCraftTransport.genericPipeBlock));
-        setItemListEntries(BuildCraftTransport.facadeItem, ItemFacade.allFacades.get(0), ItemFacade.allHollowFacades.get(0));
+        if (Config.NEI.BuildCraft.hideBuildCraftFacades) {
+            setItemListEntries(BuildCraftTransport.facadeItem, ItemFacade.allFacades.get(0), ItemFacade.allHollowFacades.get(0));
+        }
     }
 }

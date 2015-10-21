@@ -3,6 +3,7 @@ package elec332.cmip.mods.waila;
 import com.cout970.magneticraft.api.electricity.IElectricConductor;
 import com.cout970.magneticraft.api.electricity.IElectricMultiPart;
 import com.cout970.magneticraft.api.electricity.IElectricTile;
+import com.cout970.magneticraft.api.electricity.prefab.ElectricConductor;
 import com.cout970.magneticraft.api.heat.IHeatConductor;
 import com.cout970.magneticraft.api.heat.IHeatMultipart;
 import com.cout970.magneticraft.api.heat.IHeatTile;
@@ -14,6 +15,7 @@ import com.cout970.magneticraft.util.tile.TileConductorLow;
 import com.cout970.magneticraft.util.tile.TileConductorMedium;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,12 +38,12 @@ public class MagnetiCraftWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-        registerHandler(Type.BODY, IPressureMultipart.class, IPressurePipe.class, IHeatMultipart.class, IHeatTile.class, IElectricMultiPart.class, IElectricTile.class);
-        registerHandler(Type.NBT, IPressureMultipart.class, IPressurePipe.class, IHeatMultipart.class, IHeatTile.class, IElectricMultiPart.class, IElectricTile.class);
+        registerHandler(Type.BODY, IPressurePipe.class,IHeatTile.class, IElectricTile.class);
+        registerHandler(Type.NBT, IPressurePipe.class, IHeatTile.class, IElectricTile.class);
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             if (tag.hasKey(pressure)){
@@ -52,14 +54,15 @@ public class MagnetiCraftWailaHandler extends AbstractWailaCompatHandler {
             if (tag.hasKey(heat)){
                 currenttip.add(ClientMessageHandler.getHeatMessage()+ClientMessageHandler.format(tag.getDouble(heat)));
             }
-            if (tag.hasKey(energy)){
-                currenttip.add(ClientMessageHandler.getEnergyMessage()+ClientMessageHandler.format(tag.getDouble(energy))+"/"+ClientMessageHandler.format(tag.getDouble(maxEnergy)));
+            if (tag.hasKey(specialData1)){
+                if (tag.hasKey(energy)) {
+                    currenttip.add(ClientMessageHandler.getEnergyMessage() + ClientMessageHandler.format(tag.getDouble(energy)) + "/" + ClientMessageHandler.format(tag.getDouble(maxEnergy)));
+                }
                 currenttip.add(ClientMessageHandler.getVoltageMessage()+ClientMessageHandler.format(tag.getDouble(specialData1)));
                 currenttip.add(ClientMessageHandler.getResistanceMessage()+ClientMessageHandler.format(tag.getDouble(specialData2)));
                 currenttip.add(ClientMessageHandler.getEnergyTierMessage()+tag.getInteger(tier));
             }
         }
-        return currenttip;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class MagnetiCraftWailaHandler extends AbstractWailaCompatHandler {
                     tag.setString(fluid, pressureConductor.getFluid().getName());
                 }
             }
-            if (tile instanceof IHeatMultipart || tile instanceof IHeatTile){
+            if ((tile instanceof IHeatMultipart || tile instanceof IHeatTile) && Config.WAILA.MagnetiCraft.showHeat){
                 IHeatConductor heatConductor;
                 if (tile instanceof IHeatTile){
                     heatConductor = ((IHeatTile) tile).getHeatCond(new VecInt(tile))[0];
@@ -96,7 +99,7 @@ public class MagnetiCraftWailaHandler extends AbstractWailaCompatHandler {
                 IElectricConductor electricConductor = null;
                 int tier = -1;
                 if (tile instanceof IElectricTile){
-                    VecInt loc = new VecInt(tile);
+                    VecInt loc = VecInt.NULL_VECTOR;//new VecInt(tile);
                     if (tile instanceof TileConductorLow){
                         electricConductor = ((TileConductorLow) tile).getConds(loc, 0)[0];
                         tier = electricConductor.getTier();
@@ -109,8 +112,10 @@ public class MagnetiCraftWailaHandler extends AbstractWailaCompatHandler {
                     System.out.println("ERROR: Received request from multipart!");
                 }
                 if (electricConductor != null && tier != -1){
-                    tag.setDouble(energy, electricConductor.getStorage());
-                    tag.setDouble(maxEnergy, electricConductor.getMaxStorage());
+                    if (!(electricConductor instanceof ElectricConductor) && electricConductor.getMaxStorage() != 0){
+                        tag.setDouble(energy, electricConductor.getStorage());
+                        tag.setDouble(maxEnergy, electricConductor.getMaxStorage());
+                    }
                     tag.setDouble(specialData1, electricConductor.getVoltage());
                     tag.setDouble(specialData2, electricConductor.getResistance());
                     tag.setInteger(MagnetiCraftWailaHandler.tier, tier);

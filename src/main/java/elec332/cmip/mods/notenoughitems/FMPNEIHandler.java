@@ -7,6 +7,7 @@ import codechicken.nei.recipe.ShapelessRecipeHandler;
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.registry.GameData;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -26,17 +27,21 @@ public class FMPNEIHandler extends AbstractNEICompatHandler {
 
     @Override
     public void init() {
-        Item item = MicroblockProxy.itemMicro();//GameRegistry.findItem("ForgeMicroblock", "microblock");
-        int[] allTypes = new int[]{1, 2, 4, 257, 258, 260, 513, 514, 516, 769, 770, 772};
-        List<ItemStack> toAdd = Lists.newArrayList();
-        for (int i : allTypes){
-            toAdd.add(ItemMicroPart.create(i, GameData.getBlockRegistry().getNameForObject(Blocks.stone)));
+        if (Config.NEI.FMP.hideFMPMultiParts) {
+            Item item = MicroblockProxy.itemMicro();//GameRegistry.findItem("ForgeMicroblock", "microblock");
+            int[] allTypes = new int[]{1, 2, 4, 257, 258, 260, 513, 514, 516, 769, 770, 772};
+            List<ItemStack> toAdd = Lists.newArrayList();
+            for (int i : allTypes) {
+                toAdd.add(ItemMicroPart.create(i, GameData.getBlockRegistry().getNameForObject(Blocks.stone)));
+            }
+            if (item != null) {
+                setItemListEntries(item, toAdd);
+            }
         }
-        if (item != null) {
-            setItemListEntries(item, toAdd);
+        if (Config.NEI.FMP.addMultiPartRecipes) {
+            saws = toStackList(Lists.newArrayList(MicroblockProxy.sawStone(), MicroblockProxy.sawIron(), MicroblockProxy.sawDiamond()));
+            API.registerRecipeHandler(new FMPCraftingRecipeHandler());
         }
-        saws = toStackList(Lists.newArrayList(MicroblockProxy.sawStone(), MicroblockProxy.sawIron(), MicroblockProxy.sawDiamond()));
-        API.registerRecipeHandler(new FMPCraftingRecipeHandler());
     }
 
     private static List<ItemStack> saws;

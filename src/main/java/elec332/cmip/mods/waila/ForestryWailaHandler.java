@@ -2,6 +2,7 @@ package elec332.cmip.mods.waila;
 
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import forestry.api.apiculture.IBeeHousing;
 import forestry.api.apiculture.IBeeHousingInventory;
 import forestry.api.apiculture.IBeekeepingLogic;
@@ -32,12 +33,12 @@ public class ForestryWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-        registerHandler(Type.BODY, IRestrictedAccessTile.class, IPowerHandler.class, TileEngine.class, IBeeHousing.class, IMailContainer.class);
+        registerHandler(Type.BODY, IRestrictedAccessTile.class, IPowerHandler.class, /*TileEngine.class,*/ IBeeHousing.class, IMailContainer.class);
         registerHandler(Type.NBT, IRestrictedAccessTile.class, IPowerHandler.class, TileEngine.class, IBeeHousing.class, IMailContainer.class);
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             if (tag.hasKey(access)){
@@ -67,13 +68,12 @@ public class ForestryWailaHandler extends AbstractWailaCompatHandler {
                 currenttip.add(ClientMessageHandler.getMailMessage(tag.getBoolean(specialData3)));
             }
         }
-        return currenttip;
     }
 
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity tile, NBTTagCompound tag, World world, int x, int y, int z) {
         if (tile != null && tag != null){
-            if (tile instanceof IRestrictedAccessTile){
+            if (tile instanceof IRestrictedAccessTile && Config.WAILA.Forestry.showAccessData){
                 tag.setString(access, ((IRestrictedAccessTile) tile).getAccessHandler().getAccessType().getName());
             }
             if (tile instanceof IPowerHandler){
@@ -84,7 +84,7 @@ public class ForestryWailaHandler extends AbstractWailaCompatHandler {
                 tag.setString(heat, ((TileEngine) tile).getTemperatureState().toString());
                 tag.setInteger(energyOut, ((TileEngine) tile).getCurrentOutput());
             }
-            if (tile instanceof IBeeHousing){
+            if (tile instanceof IBeeHousing && Config.WAILA.Forestry.showBeeData){
                 tag.setBoolean(specialData4, true);
                 IBeeHousingInventory inv = ((IBeeHousing) tile).getBeeInventory();
                 if (inv != null) {
@@ -98,7 +98,7 @@ public class ForestryWailaHandler extends AbstractWailaCompatHandler {
                     tag.setInteger(progress, beekeepingLogic.getBeeProgressPercent());
                 }
             }
-            if (tile instanceof IMailContainer){
+            if (tile instanceof IMailContainer && Config.WAILA.Forestry.showMailData){
                 tag.setBoolean(specialData3, ((IMailContainer) tile).hasMail());
             }
         }

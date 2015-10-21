@@ -2,6 +2,7 @@ package elec332.cmip.mods.waila;
 
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import ic2.api.reactor.IReactor;
 import ic2.api.reactor.IReactorChamber;
 import ic2.core.block.TileEntityHeatSourceInventory;
@@ -35,7 +36,7 @@ public class IC2WailaHandler extends AbstractWailaCompatHandler{
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
 
@@ -61,7 +62,6 @@ public class IC2WailaHandler extends AbstractWailaCompatHandler{
             }
 
         }
-        return currenttip;
     }
 
     @Override
@@ -74,10 +74,10 @@ public class IC2WailaHandler extends AbstractWailaCompatHandler{
                 tag.setInteger(maxEnergy, ((TileEntityElectricMachine) tile).maxEnergy);
                 tag.setInteger(tier, ((TileEntityElectricMachine) tile).getSinkTier());
             }
-            if (tile instanceof TileEntityStandardMachine){
+            if (tile instanceof TileEntityStandardMachine && Config.WAILA.IC2.showProgress){
                 tag.setFloat(progress, ((TileEntityStandardMachine) tile).getProgress());
             }
-            if (tile instanceof TileEntityTeleporter){
+            if (tile instanceof TileEntityTeleporter && Config.WAILA.IC2.tpLocation){
                 tag.setIntArray(tpLoc, new int[]{((TileEntityTeleporter) tile).targetX, ((TileEntityTeleporter) tile).targetY, ((TileEntityTeleporter) tile).targetZ});
             }
 

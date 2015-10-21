@@ -1,10 +1,8 @@
 package elec332.cmip.mods.waila;
 
 import elec332.cmip.util.AbstractCMIPCompatHandler;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
+import elec332.cmip.util.WrappedTaggedList;
+import mcp.mobius.waila.api.*;
 import mcp.mobius.waila.api.impl.ModuleRegistrar;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -25,18 +23,36 @@ public abstract class AbstractWailaCompatHandler extends AbstractCMIPCompatHandl
     }
 
     @Override
-    public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public final List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        if (shouldHandle(currenttip)){
+            getWailaHead(currenttip, itemStack, accessor, config);
+        }
         return currenttip;
     }
 
-    @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        return currenttip;
+    public void getWailaHead(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
     }
 
     @Override
-    public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public final List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        if (shouldHandle(currenttip)){
+            getWailaBody(currenttip, itemStack, accessor, config);
+        }
         return currenttip;
+    }
+
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    }
+
+    @Override
+    public final List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        if (shouldHandle(currenttip)){
+            getWailaTail(currenttip, itemStack, accessor, config);
+        }
+        return currenttip;
+    }
+
+    public void getWailaTail(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
     }
 
     @Override
@@ -78,6 +94,19 @@ public abstract class AbstractWailaCompatHandler extends AbstractCMIPCompatHandl
 
     public enum Type{
         STACK, HEAD, BODY, TAIL, NBT
+    }
+
+    private boolean shouldHandle(List<String> currenttip){
+        if (currenttip instanceof WrappedTaggedList){
+            WrappedTaggedList<String, String> list = (WrappedTaggedList<String, String>) currenttip;
+            String s = list.getAdditionalData().get("done"+getName());
+            if (s != null && s.equals("yes")){
+                return false;
+            }
+            list.getAdditionalData().put("done"+getName(), "yes");
+            return true;
+        }
+        return true;
     }
 
 }

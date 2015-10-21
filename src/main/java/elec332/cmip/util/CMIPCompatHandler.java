@@ -2,6 +2,7 @@ package elec332.cmip.util;
 
 import com.google.common.reflect.ClassPath;
 import elec332.cmip.CMIP;
+import elec332.core.config.ConfigWrapper;
 import elec332.core.util.AbstractCompatHandler;
 import net.minecraftforge.common.config.Configuration;
 
@@ -17,7 +18,7 @@ public class CMIPCompatHandler extends AbstractCompatHandler {
     }
 
     public CMIPCompatHandler(String name, String packageName) {
-        super(new Configuration(CMIP.mainConfigFolder, name+".cfg"), CMIP.logger);
+        super(/*ConfigWrapper.wrapCategoryAsConfig(CMIP.mainConfig, name)*/null, CMIP.logger);
         this.name = name;
         this.packageName = "elec332.cmip.mods."+packageName;
     }

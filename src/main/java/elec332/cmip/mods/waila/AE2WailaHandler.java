@@ -10,6 +10,7 @@ import appeng.tile.qnb.TileQuantumBridge;
 import elec332.cmip.CMIP;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import elec332.core.java.ReflectionHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
@@ -34,33 +35,35 @@ public class AE2WailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-        registerHandler(Type.BODY, TileQuantumBridge.class);
-        registerHandler(Type.NBT, TileQuantumBridge.class);
-        try {
-            PartWailaDataProvider aePartHandler = new PartWailaDataProvider();
-            Field ae2Providers = PartWailaDataProvider.class.getDeclaredField("providers");
-            @SuppressWarnings("unchecked")
-            List<IPartWailaDataProvider> list = (List<IPartWailaDataProvider>) ReflectionHelper.makeFinalFieldModifiable(ae2Providers).get(aePartHandler);
-            list.clear();
-            list.add(new P2PHandler());
-            for (Type type : Type.values()){
-                registerHandler(type, aePartHandler, IPartHost.class);
-            }
-        } catch (Exception e){
-            CMIP.logger.error("Error registering AE2 part handler.");
+        if (Config.WAILA.AE2.qb) {
+            registerHandler(Type.BODY, TileQuantumBridge.class);
+            registerHandler(Type.NBT, TileQuantumBridge.class);
         }
-
+        if (Config.WAILA.AE2.p2p) {
+            try {
+                PartWailaDataProvider aePartHandler = new PartWailaDataProvider();
+                Field ae2Providers = PartWailaDataProvider.class.getDeclaredField("providers");
+                @SuppressWarnings("unchecked")
+                List<IPartWailaDataProvider> list = (List<IPartWailaDataProvider>) ReflectionHelper.makeFinalFieldModifiable(ae2Providers).get(aePartHandler);
+                list.clear();
+                list.add(new P2PHandler());
+                for (Type type : Type.values()) {
+                    registerHandler(type, aePartHandler, IPartHost.class);
+                }
+            } catch (Exception e) {
+                CMIP.logger.error("Error registering AE2 part handler.");
+            }
+        }
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         NBTTagCompound tag = accessor.getNBTData();
         if (tag != null){
             if (tag.hasKey(specialData1)){
                 currenttip.add(ClientMessageHandler.getFrequencyMessage()+tag.getLong(specialData1));
             }
         }
-        return currenttip;
     }
 
     @Override

@@ -2,6 +2,7 @@ package elec332.cmip.mods.waila;
 
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
+import elec332.cmip.util.Config;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,9 +25,11 @@ public class MystCraftWailaHandler extends AbstractWailaCompatHandler {
 
     @Override
     public void init() {
-        for (Class clazz : findClasses(mystcraftBookStands)){
-            registerHandler(Type.BODY, clazz);
-            registerHandler(Type.NBT, clazz);
+        if (Config.WAILA.MystCraft.showDimData) {
+            for (Class clazz : findClasses(mystcraftBookStands)) {
+                registerHandler(Type.BODY, clazz);
+                registerHandler(Type.NBT, clazz);
+            }
         }
     }
 
@@ -34,7 +37,7 @@ public class MystCraftWailaHandler extends AbstractWailaCompatHandler {
             "com.xcompwiz.mystcraft.tileentity.TileEntityBookstand", "com.xcompwiz.mystcraft.tileentity.TileEntityBookReceptacle"};
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public void getWailaBody(List<String> currenttip, ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         ItemStack inv = ItemStack.loadItemStackFromNBT(accessor.getNBTData().getTagList("Items", 10).getCompoundTagAt(0));
         boolean valid = false;
         int dimension = 0;
@@ -58,7 +61,6 @@ public class MystCraftWailaHandler extends AbstractWailaCompatHandler {
             currenttip.add(ClientMessageHandler.getDimensionMessage() + dimension);
             currenttip.add(ClientMessageHandler.getNameMessage() + name);
         }
-        return currenttip;
     }
 
     @Override

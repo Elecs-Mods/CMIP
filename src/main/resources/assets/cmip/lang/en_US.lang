@@ -39,3 +39,4 @@ cmip.message.connectedMachines=Connected Machines
 cmip.message.mode=Mode
 cmip.message.input=Input
 cmip.message.output=Output
+cmip.message.noConnection=No connection
