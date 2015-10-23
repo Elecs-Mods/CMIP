@@ -21,6 +21,19 @@ public abstract class AbstractNEICompatHandler extends AbstractCMIPCompatHandler
     private static Block representative;
     private static String nameOfRepresentative;
 
+    public void registerUsageAndRecipeHandler(AbstractCMIPNEITemplateRecipeHandler handler){
+        registerRecipeHandler(handler);
+        registerUsageHandler(handler);
+    }
+
+    public void registerRecipeHandler(AbstractCMIPNEITemplateRecipeHandler handler){
+        API.registerRecipeHandler(handler);
+    }
+
+    public void registerUsageHandler(AbstractCMIPNEITemplateRecipeHandler handler){
+        API.registerUsageHandler(handler);
+    }
+
     public List<Item> toItemList(List<Block> blocks){
         List<Item> ret = Lists.newArrayList();
         for (Block block : blocks){

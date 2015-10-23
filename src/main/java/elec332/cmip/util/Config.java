@@ -64,6 +64,9 @@ public class Config {
             @Configurable(comment = "If true, will hide all blocks that can't/shouldn't be placed directly from NEI.")
             public static boolean hideUnplacableBlocks = true;
 
+            @Configurable
+            public static boolean addUUMatterRecipes = true;
+
         }
 
         @Configurable.Class
