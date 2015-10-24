@@ -27,6 +27,11 @@ public class FMPNEIHandler extends AbstractNEICompatHandler {
     }
 
     @Override
+    public String getCategoryOverride() {
+        return "FMP";
+    }
+
+    @Override
     public void init() {
         if (Config.NEI.FMP.hideFMPMultiParts) {
             Item item = /*MicroblockProxy.itemMicro();*/GameRegistry.findItem("ForgeMicroblock", "microblock");
@@ -39,7 +44,7 @@ public class FMPNEIHandler extends AbstractNEICompatHandler {
                 setItemListEntries(item, toAdd);
             }
         }
-        if (Config.NEI.FMP.addMultiPartRecipes) {
+        if (Config.NEI.FMP.addMultiPartRecipes && false) {
             saws = toStackList(Lists.newArrayList(MicroblockProxy.sawStone(), MicroblockProxy.sawIron(), MicroblockProxy.sawDiamond()));
             API.registerRecipeHandler(new FMPCraftingRecipeHandler());
         }

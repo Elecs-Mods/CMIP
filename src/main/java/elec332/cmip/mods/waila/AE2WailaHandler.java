@@ -34,6 +34,11 @@ public class AE2WailaHandler extends AbstractWailaCompatHandler {
     }
 
     @Override
+    public String getCategoryOverride() {
+        return "AE2";
+    }
+
+    @Override
     public void init() {
         if (Config.WAILA.AE2.qb) {
             registerHandler(Type.BODY, TileQuantumBridge.class);

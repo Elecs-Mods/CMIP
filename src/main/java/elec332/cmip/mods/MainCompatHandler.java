@@ -2,7 +2,9 @@ package elec332.cmip.mods;
 
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.Loader;
+import elec332.cmip.CMIP;
 import elec332.cmip.util.CMIPCompatHandler;
+import elec332.cmip.util.Config;
 import elec332.core.util.AbstractCompatHandler;
 import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.Logger;
@@ -22,14 +24,34 @@ public class MainCompatHandler extends AbstractCompatHandler {
     private List<CMIPCompatHandler> handlers;
 
     @Override
+    public boolean addCategoryComment() {
+        return false;
+    }
+
+    @Override
     public void loadList() {
     }
 
     public void addHandler(CMIPCompatHandler handler) {
-        if (Loader.isModLoaded(handler.getModName())){
+        if (configuration.getBoolean("enabled", Config.mainHandlerCategory+"."+getCategory(handler).toLowerCase(), handler.enabledByDefault(), "When set to false, none of the handlers for "+handler.getModName()+" will be loaded.") && Loader.isModLoaded(handler.getModName())){
             handlers.add(handler);
             handler.registerModules();
         }
+    }
+
+    private String getCategory(CMIPCompatHandler handler){
+        List<String> validNames = CMIP.configWrapper.getRegisteredCategories();
+        String name = handler.getConfig().toLowerCase();
+        if (validNames.contains(Config.mainHandlerCategory+"."+name))
+            return name;
+        for (String s : validNames){
+            if (s.contains(Config.mainHandlerCategory+".")){
+                s = s.replace(Config.mainHandlerCategory+".", "");
+                if (s.contains(name) || name.contains(s))
+                    return s;
+            }
+        }
+        throw new IllegalArgumentException();
     }
 
     @Override
@@ -44,17 +66,27 @@ public class MainCompatHandler extends AbstractCompatHandler {
         }
     }
 
-    public CMIPCompatHandler newCompatHandler(String modName){
-        CMIPCompatHandler handler = new CMIPCompatHandler(modName);
+    /* Yes, im lazy */
+    public CMIPCompatHandler createHandler(String modName){
+        return new CMIPCompatHandler(modName);
+    }
+
+    public CMIPCompatHandler registerHandler(CMIPCompatHandler handler){
         addHandler(handler);
         return handler;
     }
 
+    public CMIPCompatHandler createAndRegisterHandler(String modName){
+        CMIPCompatHandler handler = createHandler(modName);
+        return registerHandler(handler);
+    }
+    /* Approx end of lazyness */
+
     public static CMIPCompatHandler waila, nei;
 
     public void loadHandlers(){
-        waila = newCompatHandler(WAILA);
-        nei = newCompatHandler(NEI);
+        waila = createAndRegisterHandler(WAILA);
+        nei = registerHandler(createHandler(NEI).setConfigName("NEI"));
     }
 
     public static final String APPLIEDENERGISTICS2 = "appliedenergistics2";

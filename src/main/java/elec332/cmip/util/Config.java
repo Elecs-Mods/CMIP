@@ -1,12 +1,15 @@
 package elec332.cmip.util;
 
+import elec332.cmip.mods.MainCompatHandler;
 import elec332.core.config.Configurable;
 
 /**
  * Created by Elec332 on 19-10-2015.
  */
-@Configurable.Class(category = "handlers", comment = "In this category you can find a broken-down list of all the handlers in this mod, with the option to enable/disable them.")
+@Configurable.Class(category = Config.mainHandlerCategory, comment = "In this category you can find a broken-down list of all the handlers in this mod, with the option to enable/disable them.")
 public class Config {
+
+    public static final String mainHandlerCategory = "handlers";
 
     @Configurable.Class
     public static class NEI {

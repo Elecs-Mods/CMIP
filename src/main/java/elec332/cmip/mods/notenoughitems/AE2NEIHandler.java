@@ -18,6 +18,11 @@ public class AE2NEIHandler extends AbstractNEICompatHandler{
     }
 
     @Override
+    public String getCategoryOverride() {
+        return "AE2";
+    }
+
+    @Override
     public void init() {
         if (Config.NEI.AE2.hideAE2Facades)
             setItemListEntries(AEApi.instance().items().itemFacade.item(), ((ItemFacade) AEApi.instance().items().itemFacade.item()).createFacadeForItem(new ItemStack(Blocks.stone), false));

@@ -1,5 +1,6 @@
 package elec332.cmip;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -51,20 +52,21 @@ public class CMIP {
         mainConfig = new Configuration(new File(mainConfigFolder, "main.cfg"));
         mainConfig.load();
         configWrapper = new ConfigWrapper(mainConfig);
-        compatHandler = new MainCompatHandler(/*mainConfig*/null, logger);
+        configWrapper.registerConfigWithInnerClasses(new Config());
+        configWrapper.refresh();
+        compatHandler = new MainCompatHandler(mainConfig, logger);
         compatHandler.loadHandlers();
         if (Loader.isModLoaded("Waila")){
             WrappedTaggedList.ListReplacer.registerAll();
         }
-        configWrapper.registerConfigWithInnerClasses(new Config());
-        configWrapper.refresh();
+
         //setting up mod stuff
 
         MCModInfo.CreateMCModInfo(event, "Created by Elec332",
                 "Provides more cross-mod integration.",
                 "website link", "logo",
                 new String[]{"Elec332"});
-        if (mainConfig.hasChanged())
+        //if (mainConfig.hasChanged())
             mainConfig.save();
         /*Class c = Config.WAILA.AE2.class;
         System.out.println(c.getName());
@@ -87,7 +89,16 @@ public class CMIP {
 
     @Mod.EventHandler
     public void loadComplete(FMLLoadCompleteEvent event){
-        compatHandler.init();
+        /*  */
+        try {
+            compatHandler.init();
+        } catch (Exception e){
+            e.printStackTrace();
+            FMLCommonHandler.instance().exitJava(0, false);
+        }
+
+        if (mainConfig.hasChanged())
+            mainConfig.save();
     }
 
 }

@@ -11,6 +11,10 @@ import java.util.List;
  */
 public abstract class AbstractCMIPCompatHandler extends AbstractCompatHandler.ICompatHandler{
 
+    public String getCategoryOverride(){
+        return getName();
+    }
+
     public List<Class> findClasses(String... s){
         List<Class> ret = Lists.newArrayList();
         for (String s1 : s) {

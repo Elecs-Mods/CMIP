@@ -4,21 +4,24 @@ import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
 import elec332.cmip.util.Config;
 import ic2.api.recipe.ICannerEnrichRecipeManager;
+import ic2.api.recipe.Recipes;
 import ic2.core.Ic2Items;
 import ic2.core.block.machine.gui.GuiCanner;
 import ic2.core.block.machine.gui.GuiReplicator;
 import ic2.core.block.machine.gui.GuiScanner;
 import ic2.core.item.ItemFluidCell;
 import ic2.core.uu.UuGraph;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.Iterator;
@@ -53,9 +56,9 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
             }
             registerRecipeHandler(new IC2ReplicatorHandler());
 
-            //enrichRecipes = Maps.newHashMap(Recipes.cannerEnrich.getRecipes());
+            enrichRecipes = Maps.newHashMap(Recipes.cannerEnrich.getRecipes());
 
-            //registerUsageAndRecipeHandler(new FluidSolidCanningMachineHandler());
+            registerUsageAndRecipeHandler(new FluidSolidCanningMachineHandler());
         }
     }
 
@@ -77,12 +80,7 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
 
         @Override
         public String getRecipeName() {
-            return "ic2.Replicator.gui.name";
-        }
-
-        @Override
-        public int numRecipes() {
-            return 1;
+            return StatCollector.translateToLocal("ic2.Replicator.gui.name");
         }
 
         @Override
@@ -128,7 +126,7 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
             public CachedUURecipe(ItemWithMeta output){
                 if (!uuMap.keySet().contains(output))
                     throw new IllegalArgumentException();
-                this.stack = output;
+                this.stack = new PositionedStack(output.toStack(), 10, 12);
                 double uu = uuMap.get(output);
                 if (uu == Double.POSITIVE_INFINITY || uu <= 0) {
                     throw new IllegalArgumentException();
@@ -136,10 +134,12 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
                 uu *= 1000;
                 this.uu = uu;
                 this.energy = (uu/0.1)*512;
+                list = Lists.newArrayList();
             }
 
-            private ItemWithMeta stack;
+            private PositionedStack stack;
             private double uu, energy;
+            private List<PositionedStack> list;
 
             public double getNeededUU() {
                 return uu;
@@ -151,13 +151,21 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
 
             @Override
             public PositionedStack getResult() {
-                return new PositionedStack(stack.toStack(), 10, 12);
+                return stack;
+            }
+
+            @Override
+            public List<PositionedStack> getIngredients() {
+                return this.getCycledIngredients(cycleticks / 20, list);
             }
         }
 
     }
 
-    public static class FluidSolidCanningMachineHandler extends AbstractCMIPNEITemplateRecipeHandler{
+    public static class FluidSolidCanningMachineHandler extends AbstractCMIPNEITemplateRecipeHandler {
+
+        private boolean b = true;
+        private static final int cycleTime = 50;
 
         @Override
         public void loadCraftingRecipes(String outputId, Object... results) {
@@ -185,47 +193,92 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
         }
 
         @Override
+        public int recipiesPerPage() {
+            return 1;
+        }
+
+        @Override
+        public void drawBackground(int recipe) {
+            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            GuiDraw.changeTexture(this.getGuiTexture());
+            GuiDraw.drawTexturedModalRect(0, 10, 5, 11, 166, 90);
+            GuiDraw.drawTexturedModalRect(58, 80, 196, 65, 50, 14);
+            GuiDraw.drawTexturedModalRect(69, 21, 233, 0, (int) (((this.cycleticks % cycleTime) / (float)cycleTime) * 23), 14);
+        }
+
+        @Override
+        public void onUpdate() {
+            super.onUpdate();
+            if ((float)(this.cycleticks % cycleTime) / (float)cycleTime == 0){
+                b = !b;
+            }
+        }
+
+        @Override
         public String getGuiTexture() {
             return "ic2:textures/gui/GUICanner.png";
         }
 
         @Override
         public String getRecipeName() {
-            return "ic2.FluidBottler.gui.name";
+            return StatCollector.translateToLocal("ic2.Canner.gui.name");
         }
 
         @Override
         public List<String> handleTooltip(GuiRecipe gui, List<String> currenttip, int recipe) {
-            return currenttip;
+            return handleTankTooltips(gui, currenttip, recipe);
         }
 
-        public class CachedSFCannerRecipe extends CachedRecipe{
+        public class CachedSFCannerRecipe extends AbstractCachedRecipe {
 
             private CachedSFCannerRecipe(ICannerEnrichRecipeManager.Input input, FluidStack output){
-                this.input = input;
-                this.output = output;
+                PositionedStack inputStack = new PositionedStack(input.additive.getInputs(), 75, 43);
+                this.listF = Lists.newArrayList(inputStack, new PositionedStack(getUniversalFluidCell(), 36, 16));
+                this.listI = Lists.newArrayList(inputStack);
+                addTank(new Rectangle(38, 47, 12, 45), input.fluid, 8000);
+                addTank(new GuiFluidTank(new Rectangle(116, 47, 12, 45), output, 8000){
+                    @Override
+                    public void draw() {
+                        if (!b) {
+                            super.draw();
+                        }
+                    }
+
+                    @Override
+                    public List<String> getTooltip() {
+                        if (!b) {
+                            return super.getTooltip();
+                        } else {
+                            return Lists.newArrayList(ClientMessageHandler.getEmptyMessage());
+                        }
+                    }
+                });
+                ItemStack stack = getUniversalFluidCell();
+                ((ItemFluidCell)stack.getItem()).fill(stack, output, true);
+                result = new PositionedStack(stack, 114, 16);
             }
 
-            private final ICannerEnrichRecipeManager.Input input;
-            private final FluidStack output;
+            private List<PositionedStack> listF;
+            private List<PositionedStack> listI;
+            private PositionedStack result;
+
 
             @Override
             public PositionedStack getResult() {
-                ItemStack stack = Ic2Items.cell;
-                ((ItemFluidCell)stack.getItem()).fill(stack, output, true);
-                return new PositionedStack(stack, 17, 152);
+                return b?result:null;
             }
 
             @Override
-            public PositionedStack getIngredient() {
-                return new PositionedStack(input.additive.getInputs() , 80, 44);
+            public List<PositionedStack> getIngredients() {
+                return b?listF:listI;
             }
 
-            @Override
-            public PositionedStack getOtherStack() {
-                return new PositionedStack(new ItemStack(Items.cooked_chicken), 10, 10);
-            }
         }
+
+        private static ItemStack getUniversalFluidCell(){
+            return Ic2Items.FluidCell.copy();
+        }
+
     }
 
     private static final class ItemWithMeta {
