@@ -124,6 +124,7 @@ public class MainCompatHandler extends AbstractCompatHandler {
     public static final String STEVESCARTS = "StevesCarts";
     public static final String TINKERSCONSTRUCT = "TConstruct";
     public static final String TINKERSMECHWORKS = "TMechworks";
+    public static final String TINKERSSTEELWORKS = "TSteelworks";
     public static final String THAUMCRAFT = "Thaumcraft";
     public static final String WAILA = "Waila";
     public static final String WIRELESSREDSTONECBE = "WR-CBE|Core";

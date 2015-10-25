@@ -2,17 +2,19 @@ package elec332.cmip.mods.notenoughitems;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.PositionedStack;
+import codechicken.nei.recipe.GuiCraftingRecipe;
 import codechicken.nei.recipe.GuiRecipe;
 import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import elec332.core.client.render.RenderHelper;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -48,6 +50,56 @@ public abstract class AbstractCMIPNEITemplateRecipeHandler extends TemplateRecip
         }
     }
 
+    @Override
+    public void loadCraftingRecipes(String outputId, Object... results) {
+        if (outputId.equals("liquid") || outputId.equals("fluid")){
+            Object o = results[0];
+            if (o instanceof FluidStack){
+                loadCraftingRecipes((FluidStack) o);
+            } else if (o instanceof Fluid){
+                loadCraftingRecipes(new FluidStack((Fluid) o, FluidContainerRegistry.BUCKET_VOLUME));
+            } else if (o instanceof ItemStack){
+                loadCraftingRecipes(getFromItem((ItemStack) o));
+            }
+        } else {
+            if(outputId.equals("item")) {
+                FluidStack fluid = getFromItem((ItemStack)results[0]);
+                if (fluid != null){
+                    loadCraftingRecipes(fluid);
+                }
+            }
+            super.loadCraftingRecipes(outputId, results);
+        }
+    }
+
+    public void loadCraftingRecipes(FluidStack result) {
+    }
+
+    @Override
+    public void loadUsageRecipes(String inputId, Object... ingredients) {
+        if (inputId.equals("liquid") || inputId.equals("fluid")){
+            Object o = ingredients[0];
+            if (o instanceof FluidStack){
+                loadCraftingRecipes((FluidStack) o);
+            } else if (o instanceof Fluid){
+                loadCraftingRecipes(new FluidStack((Fluid) o, FluidContainerRegistry.BUCKET_VOLUME));
+            } else if (o instanceof ItemStack){
+                loadCraftingRecipes(getFromItem((ItemStack) o));
+            }
+        } else {
+            if(inputId.equals("item")) {
+                FluidStack fluid = getFromItem((ItemStack) ingredients[0]);
+                if (fluid != null) {
+                    loadUsageRecipes(fluid);
+                }
+            }
+            super.loadUsageRecipes(inputId, ingredients);
+        }
+    }
+
+    public void loadUsageRecipes(FluidStack result) {
+    }
+
     public void addTransferRect(List<Class<? extends GuiContainer>> gui, Rectangle rectangle, String identifier, boolean addToRecipeGui, Object... args){
         RecipeTransferRect transferRect = new RecipeTransferRect(rectangle, identifier, args);
         if (addToRecipeGui)
@@ -76,6 +128,42 @@ public abstract class AbstractCMIPNEITemplateRecipeHandler extends TemplateRecip
             }
         }
         return currenttip;
+    }
+
+    public FluidStack getFromItem(ItemStack stack){
+        if (stack != null && stack.getItem() != null){
+            Item item  = stack.getItem();
+            if (item instanceof IFluidContainerItem){
+                return ((IFluidContainerItem) item).getFluid(stack);
+            }
+            FluidStack ret = FluidContainerRegistry.getFluidForFilledItem(stack);
+            if (ret == null){
+                Block block = Block.getBlockFromItem(item);
+                if (block instanceof IFluidBlock){
+                    Fluid fluid = ((IFluidBlock) block).getFluid();
+                    if (fluid != null){
+                        ret = new FluidStack(fluid, FluidContainerRegistry.BUCKET_VOLUME);
+                    }
+                }
+            }
+            return ret;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean mouseClicked(GuiRecipe gui, int button, int i) {
+        if (button == 1){
+            CachedRecipe recipe = arecipes.get(i);
+            if (recipe instanceof AbstractCachedRecipe){
+                for (AbstractCachedRecipe.GuiFluidTank tank : ((AbstractCachedRecipe) recipe).recipeTanks){
+                    if (tank.isMouseOver(gui, i)){
+                        return GuiCraftingRecipe.openRecipeGui("fluid", tank.fluidStack);
+                    }
+                }
+            }
+        }
+        return super.mouseClicked(gui, button, i);
     }
 
     public abstract class AbstractCachedRecipe extends CachedRecipe {
@@ -159,39 +247,6 @@ public abstract class AbstractCMIPNEITemplateRecipeHandler extends TemplateRecip
             }
         }
 
-
-
-    }
-
-    protected static final class ItemWithMeta {
-
-        protected ItemWithMeta(ItemStack stack){
-            if (stack == null || stack.getItem() == null)
-                throw new IllegalArgumentException();
-            this.item = stack.getItem();
-            this.meta = stack.getItemDamage();
-        }
-
-        private final Item item;
-        private final int meta;
-
-        public ItemStack toStack(){
-            return new ItemStack(item, 1, meta);
-        }
-
-        @Override
-        public int hashCode() {
-            return super.hashCode()*meta*5+item.hashCode()*39;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof ItemWithMeta && ((ItemWithMeta) obj).item == item && ((ItemWithMeta) obj).meta == meta;
-        }
-
-        public boolean stackEqual(ItemStack stack){
-            return stack != null && stack.getItem() != null && stack.getItem() == item && stack.getItemDamage() == meta;
-        }
     }
 
     protected final List<PositionedStack> emptyList(){

@@ -86,6 +86,14 @@ public class Config {
 
         }
 
+        @Configurable.Class
+        public static class TSteelWorks {
+
+            @Configurable
+            public static boolean addHighOvenHandler = true;
+
+        }
+
     }
 
     @Configurable.Class

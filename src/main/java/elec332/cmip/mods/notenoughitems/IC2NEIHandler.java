@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 import elec332.cmip.client.ClientMessageHandler;
 import elec332.cmip.mods.MainCompatHandler;
 import elec332.cmip.util.Config;
+import elec332.cmip.util.ItemWithMeta;
 import ic2.api.recipe.ICannerEnrichRecipeManager;
 import ic2.api.recipe.Recipes;
 import ic2.core.Ic2Items;
@@ -53,7 +54,7 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
                     return UuGraph.iterator();
                 }
             }){
-                uuMap.put(new AbstractCMIPNEITemplateRecipeHandler.ItemWithMeta(entry.getKey()), entry.getValue() * 1.0E-5D);
+                uuMap.put(new ItemWithMeta(entry.getKey()), entry.getValue() * 1.0E-5D);
             }
             registerRecipeHandler(new IC2ReplicatorHandler(), 0.9f);
         }
@@ -73,7 +74,7 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
 
     }
 
-    private static final Map<AbstractCMIPNEITemplateRecipeHandler.ItemWithMeta, Double> uuMap;
+    private static final Map<ItemWithMeta, Double> uuMap;
     private static Map<ICannerEnrichRecipeManager.Input, FluidStack> enrichRecipes;
 
     public static class IC2ReplicatorHandler extends AbstractCMIPNEITemplateRecipeHandler {
