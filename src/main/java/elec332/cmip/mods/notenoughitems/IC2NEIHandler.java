@@ -39,11 +39,13 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
 
     @Override
     public void init() {
+
         if (Config.NEI.IC2.hideUnplacableBlocks) {
             removeFromSight(Ic2Items.reinforcedDoorBlock);
             removeFromSight(Ic2Items.copperCableBlock);
             removeFromSight(Ic2Items.miningPipeTip);
         }
+
         if (Config.NEI.IC2.addUUMatterRecipes){
             for (Map.Entry<ItemStack, Double> entry : new Iterable<Map.Entry<ItemStack, Double>>() {
                 @Override
@@ -54,17 +56,21 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
                 uuMap.put(new AbstractCMIPNEITemplateRecipeHandler.ItemWithMeta(entry.getKey()), entry.getValue() * 1.0E-5D);
             }
             registerRecipeHandler(new IC2ReplicatorHandler(), 0.9f);
+        }
 
+        if (Config.NEI.IC2.addSolidFluidCannerHandler){
             enrichRecipes = Maps.newHashMap(Recipes.cannerEnrich.getRecipes());
-
             registerUsageAndRecipeHandler(new FluidSolidCanningMachineHandler(), 0.9f);
+        }
 
+        if (Config.NEI.IC2.removeCrashyAndDuplicateIC2Handlers){
             try {
                 removeHandler(getClass("ic2.neiIntegration.core.recipehandler.FluidCannerRecipeHandler", TemplateRecipeHandler.class));
             } catch (Exception e){
                 //Ignored
             }
         }
+
     }
 
     private static final Map<AbstractCMIPNEITemplateRecipeHandler.ItemWithMeta, Double> uuMap;

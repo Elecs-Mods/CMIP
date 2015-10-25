@@ -70,6 +70,12 @@ public class Config {
             @Configurable
             public static boolean addUUMatterRecipes = true;
 
+            @Configurable
+            public static boolean addSolidFluidCannerHandler = true;
+
+            @Configurable
+            public static boolean removeCrashyAndDuplicateIC2Handlers = true;
+
         }
 
         @Configurable.Class
