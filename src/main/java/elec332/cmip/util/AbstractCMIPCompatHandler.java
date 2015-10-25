@@ -27,6 +27,20 @@ public abstract class AbstractCMIPCompatHandler extends AbstractCompatHandler.IC
         return ret;
     }
 
+    @SuppressWarnings("unchecked")
+    public static <C> Class<? extends C> getClass(String className, Class<? extends C> check) throws ClassNotFoundException {
+        Class clazz = Class.forName(className);
+        if (clazz != null) {
+            if (check.isAssignableFrom(clazz)) {
+                return (Class<? extends C>) clazz;
+            } else {
+                throw new IllegalArgumentException();
+            }
+        } else {
+            throw new ClassNotFoundException(className);
+        }
+    }
+
     protected static final String energy, maxEnergy, tier, progress, tpLoc, heat, maxHeat, laser, avgEnergy, name, access,
                                     range, active, specialData1, energyOut, specialData2, specialData3, specialData4, specialData5,
                                     pressure, maxPressure, temperature, maxTemperature, fluid;

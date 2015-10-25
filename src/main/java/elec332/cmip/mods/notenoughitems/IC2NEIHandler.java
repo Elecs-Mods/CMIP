@@ -17,7 +17,6 @@ import ic2.core.block.machine.gui.GuiReplicator;
 import ic2.core.block.machine.gui.GuiScanner;
 import ic2.core.item.ItemFluidCell;
 import ic2.core.uu.UuGraph;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
@@ -59,6 +58,12 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
             enrichRecipes = Maps.newHashMap(Recipes.cannerEnrich.getRecipes());
 
             registerUsageAndRecipeHandler(new FluidSolidCanningMachineHandler(), 0.9f);
+
+            try {
+                removeHandler(getClass("ic2.neiIntegration.core.recipehandler.FluidCannerRecipeHandler", TemplateRecipeHandler.class));
+            } catch (Exception e){
+                //Ignored
+            }
         }
     }
 

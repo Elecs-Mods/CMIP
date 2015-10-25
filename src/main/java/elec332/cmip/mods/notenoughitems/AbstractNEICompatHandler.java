@@ -1,6 +1,7 @@
 package elec332.cmip.mods.notenoughitems;
 
 import codechicken.nei.api.API;
+import codechicken.nei.recipe.TemplateRecipeHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.registry.GameData;
@@ -26,6 +27,11 @@ public abstract class AbstractNEICompatHandler extends AbstractCMIPCompatHandler
 
     static Map<AbstractCMIPNEITemplateRecipeHandler, Float> recipeHandlers;
     static Map<AbstractCMIPNEITemplateRecipeHandler, Float> usageHandlers;
+    static List<Class<? extends TemplateRecipeHandler>> handlersToRemove;
+
+    public void removeHandler(Class<? extends TemplateRecipeHandler> clazz){
+        handlersToRemove.add(clazz);
+    }
 
     public void registerUsageAndRecipeHandler(AbstractCMIPNEITemplateRecipeHandler handler, float position){
         registerRecipeHandler(handler, position);
@@ -128,6 +134,7 @@ public abstract class AbstractNEICompatHandler extends AbstractCMIPCompatHandler
         nameOfRepresentative = GameData.getBlockRegistry().getNameForObject(representative);
         recipeHandlers = Maps.newHashMap();
         usageHandlers = Maps.newHashMap();
+        handlersToRemove = Lists.newArrayList();
     }
 
 }
