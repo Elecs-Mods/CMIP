@@ -52,17 +52,17 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
                     return UuGraph.iterator();
                 }
             }){
-                uuMap.put(new ItemWithMeta(entry.getKey()), entry.getValue() * 1.0E-5D);
+                uuMap.put(new AbstractCMIPNEITemplateRecipeHandler.ItemWithMeta(entry.getKey()), entry.getValue() * 1.0E-5D);
             }
-            registerRecipeHandler(new IC2ReplicatorHandler());
+            registerRecipeHandler(new IC2ReplicatorHandler(), 0.9f);
 
             enrichRecipes = Maps.newHashMap(Recipes.cannerEnrich.getRecipes());
 
-            registerUsageAndRecipeHandler(new FluidSolidCanningMachineHandler());
+            registerUsageAndRecipeHandler(new FluidSolidCanningMachineHandler(), 0.9f);
         }
     }
 
-    private static final Map<ItemWithMeta, Double> uuMap;
+    private static final Map<AbstractCMIPNEITemplateRecipeHandler.ItemWithMeta, Double> uuMap;
     private static Map<ICannerEnrichRecipeManager.Input, FluidStack> enrichRecipes;
 
     public static class IC2ReplicatorHandler extends AbstractCMIPNEITemplateRecipeHandler {
@@ -140,14 +140,6 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
             private PositionedStack stack;
             private double uu, energy;
             private List<PositionedStack> list;
-
-            public double getNeededUU() {
-                return uu;
-            }
-
-            public double getNeededEnergy() {
-                return energy;
-            }
 
             @Override
             public PositionedStack getResult() {
@@ -279,37 +271,6 @@ public class IC2NEIHandler extends AbstractNEICompatHandler {
             return Ic2Items.FluidCell.copy();
         }
 
-    }
-
-    private static final class ItemWithMeta {
-
-        private ItemWithMeta(ItemStack stack){
-            if (stack == null || stack.getItem() == null)
-                throw new IllegalArgumentException();
-            this.item = stack.getItem();
-            this.meta = stack.getItemDamage();
-        }
-
-        private final Item item;
-        private final int meta;
-
-        public ItemStack toStack(){
-            return new ItemStack(item, 1, meta);
-        }
-
-        @Override
-        public int hashCode() {
-            return super.hashCode()*meta*5+item.hashCode()*39;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof ItemWithMeta && ((ItemWithMeta) obj).item == item && ((ItemWithMeta) obj).meta == meta;
-        }
-
-        public boolean stackEqual(ItemStack stack){
-            return stack != null && stack.getItem() != null && stack.getItem() == item && stack.getItemDamage() == meta;
-        }
     }
 
     static {

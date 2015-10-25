@@ -8,6 +8,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import elec332.core.client.render.RenderHelper;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.fluids.FluidStack;
@@ -159,6 +161,37 @@ public abstract class AbstractCMIPNEITemplateRecipeHandler extends TemplateRecip
 
 
 
+    }
+
+    protected static final class ItemWithMeta {
+
+        protected ItemWithMeta(ItemStack stack){
+            if (stack == null || stack.getItem() == null)
+                throw new IllegalArgumentException();
+            this.item = stack.getItem();
+            this.meta = stack.getItemDamage();
+        }
+
+        private final Item item;
+        private final int meta;
+
+        public ItemStack toStack(){
+            return new ItemStack(item, 1, meta);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode()*meta*5+item.hashCode()*39;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof ItemWithMeta && ((ItemWithMeta) obj).item == item && ((ItemWithMeta) obj).meta == meta;
+        }
+
+        public boolean stackEqual(ItemStack stack){
+            return stack != null && stack.getItem() != null && stack.getItem() == item && stack.getItemDamage() == meta;
+        }
     }
 
     protected final List<PositionedStack> emptyList(){

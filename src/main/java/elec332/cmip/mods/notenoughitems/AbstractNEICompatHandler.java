@@ -2,6 +2,7 @@ package elec332.cmip.mods.notenoughitems;
 
 import codechicken.nei.api.API;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import cpw.mods.fml.common.registry.GameData;
 import elec332.cmip.util.AbstractCMIPCompatHandler;
 import net.minecraft.block.Block;
@@ -9,7 +10,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Elec332 on 6-10-2015.
@@ -21,17 +24,52 @@ public abstract class AbstractNEICompatHandler extends AbstractCMIPCompatHandler
     private static Block representative;
     private static String nameOfRepresentative;
 
-    public void registerUsageAndRecipeHandler(AbstractCMIPNEITemplateRecipeHandler handler){
-        registerRecipeHandler(handler);
-        registerUsageHandler(handler);
+    static Map<AbstractCMIPNEITemplateRecipeHandler, Float> recipeHandlers;
+    static Map<AbstractCMIPNEITemplateRecipeHandler, Float> usageHandlers;
+
+    public void registerUsageAndRecipeHandler(AbstractCMIPNEITemplateRecipeHandler handler, float position){
+        registerRecipeHandler(handler, position);
+        registerUsageHandler(handler, position);
     }
 
-    public void registerRecipeHandler(AbstractCMIPNEITemplateRecipeHandler handler){
-        API.registerRecipeHandler(handler);
+    public void registerRecipeHandler(AbstractCMIPNEITemplateRecipeHandler handler, float position){
+        recipeHandlers.put(handler, position);
     }
 
-    public void registerUsageHandler(AbstractCMIPNEITemplateRecipeHandler handler){
-        API.registerUsageHandler(handler);
+    public void registerUsageHandler(AbstractCMIPNEITemplateRecipeHandler handler, float position){
+        usageHandlers.put(handler, position);
+        //GuiUsageRecipe.usagehandlers = registerHandler(handler, GuiUsageRecipe.usagehandlers, position);
+    }
+
+    /* Why do you make me return an ArrayList, NEI? :( */
+    static <A> ArrayList<A> registerHandler(A obj, ArrayList<A> list, float position){
+        /* Mimic NEI checking */
+        for (Object o : list){
+            if (o.getClass() == obj.getClass())
+                return list;
+        }
+
+        if (position <= 0){
+            list.add(obj);
+            return list;
+        }
+        ArrayList<A> ret = Lists.newArrayList();
+        if (position >= 1){
+            ret.add(obj);
+            ret.addAll(list);
+            return ret;
+        }
+        int i = 0;
+        int approxNewIndex = (int) (list.size() * position);
+        System.out.println(approxNewIndex);
+        for (A a : list){
+            ret.add(a);
+            if (i == approxNewIndex){
+                ret.add(obj);
+            }
+            i++;
+        }
+        return ret;
     }
 
     public List<Item> toItemList(List<Block> blocks){
@@ -88,6 +126,8 @@ public abstract class AbstractNEICompatHandler extends AbstractCMIPCompatHandler
     static {
         representative = Blocks.stone;
         nameOfRepresentative = GameData.getBlockRegistry().getNameForObject(representative);
+        recipeHandlers = Maps.newHashMap();
+        usageHandlers = Maps.newHashMap();
     }
 
 }

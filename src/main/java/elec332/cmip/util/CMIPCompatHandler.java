@@ -63,7 +63,7 @@ public class CMIPCompatHandler extends AbstractCompatHandler {
         try {
             for (ClassPath.ClassInfo classInfo : ClassPath.from(getClass().getClassLoader()).getTopLevelClasses(packageName)){
                 Class clazz = classInfo.load();
-                if (!clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers())){
+                if (!clazz.isInterface() && !Modifier.isAbstract(clazz.getModifiers()) && AbstractCMIPCompatHandler.class.isAssignableFrom(clazz)){
                     addHandler((ICompatHandler) clazz.newInstance());
                 }
             }
