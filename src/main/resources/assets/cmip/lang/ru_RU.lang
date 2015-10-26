@@ -1,0 +1,41 @@
+##MESSAGE
+cmip.message.empty=Пусто
+cmip.message.liquid=Жидкость
+cmip.message.amount=Количество
+cmip.message.dimension=Измерение
+cmip.message.name=Имя
+cmip.message.profession=Профессия
+cmip.message.energy=Энергия
+cmip.message.tier=Уровень
+cmip.message.output=Выход
+cmip.message.progress=Прогресс
+cmip.message.target=Цель
+cmip.message.heat=Температура
+cmip.message.max=Макс.
+cmip.message.min=Мин.
+cmip.message.average=Средн.
+cmip.message.noAccess=Нет доступа
+cmip.message.owner=Владелец
+cmip.message.active=Активн.
+cmip.message.range=Дальность
+cmip.message.loadedChunks=Загруженные чанки
+cmip.message.access=Доступ
+
+cmip.message.forestry.drone=Трутень
+cmip.message.forestry.queen=Матка
+cmip.message.forestry.newMail=Новое письмо
+cmip.message.forestry.noNewMail=Нет новых писем
+
+cmip.message.lifeSpan=Срок жизни
+cmip.message.frequency=Частота
+cmip.message.searchLocation=Зона поиска
+cmip.message.pressure=Давление
+cmip.message.fluid=Жидкость
+cmip.message.temperature=Температура
+cmip.message.voltage=Напряжение
+cmip.message.resistance=Сопротивление
+cmip.message.connectedMachines=Соединённые механизмы
+cmip.message.mode=Режим
+cmip.message.input=Вход
+cmip.message.output=Выход
+cmip.message.noConnection=Нет соединения
