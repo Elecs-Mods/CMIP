@@ -13,7 +13,7 @@ cmip.message.target=Target
 cmip.message.heat=Heat
 cmip.message.max=Max
 cmip.message.min=Min
-mip.message.average=Average
+cmip.message.average=Average
 cmip.message.noAccess=No Access
 cmip.message.owner=Owner
 cmip.message.active=Active
@@ -27,7 +27,6 @@ cmip.message.forestry.newMail=New Mail
 cmip.message.forestry.noNewMail=No new mail
 
 cmip.message.lifeSpan=Life Span
-cmip.message.frequency=Frequency
 cmip.message.searchLocation=Search location
 cmip.message.frequency=Frequency
 cmip.message.pressure=Pressure
